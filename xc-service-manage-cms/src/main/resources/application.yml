@@ -1,0 +1,9 @@
+server:
+  port: 31001 # 默认端口号
+spring:
+  application:
+    name: xc-service-manage-cms # 可以通过name关闭bootstrap
+  data:
+    mongodb:
+      uri:  mongodb://root:123@localhost:27017 # mongodb 的服务地址
+      database: xc_cms                          # 需要操作的数据库名称
