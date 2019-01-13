@@ -6,7 +6,6 @@ import com.xuecheng.framework.domain.cms.request.QueryPageRequest;
 import com.xuecheng.framework.domain.cms.response.CmsPageResult;
 import com.xuecheng.framework.model.response.QueryResponseResult;
 import com.xuecheng.manage_cms.service.PageService;
-import com.xuecheng.manage_cms.service.SiteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,7 +26,7 @@ public class CmsPageController implements CmsPageControllerApi {
 	}
 
 	@Override
-	@PostMapping("/add")
+	@PostMapping("/add") // 保存使用post，这里接收一个json格式字符串。
 	public CmsPageResult add(@RequestBody CmsPage cmsPage) {
 		return pageService.add(cmsPage);
 	}

@@ -101,7 +101,7 @@ public class PageService {
 				cmsPage.getSiteId(),
 				cmsPage.getPageWebPath());
 
-		if (Objects.isNull(cmsPage)) { // 如果为空表明保存的页面不存在，可以进行保存。
+		if (Objects.isNull(cmsPageInfo)) { // 如果为空表明保存的页面不存在，可以进行保存。
 			// 为了避免传入的id有值，设置id为null让mongodb生成id。
 			cmsPage.setPageId(null);
 			// 保存后会将生成的id封装在返回的对象中。
