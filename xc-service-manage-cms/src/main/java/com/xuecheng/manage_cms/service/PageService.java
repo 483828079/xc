@@ -2,6 +2,7 @@ package com.xuecheng.manage_cms.service;
 
 import com.xuecheng.framework.domain.cms.CmsPage;
 import com.xuecheng.framework.domain.cms.request.QueryPageRequest;
+import com.xuecheng.framework.domain.cms.response.CmsPageResult;
 import com.xuecheng.framework.model.response.CommonCode;
 import com.xuecheng.framework.model.response.QueryResponseResult;
 import com.xuecheng.framework.model.response.QueryResult;
@@ -10,6 +11,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
+
+import java.util.Objects;
 
 @Service
 public class PageService {
@@ -82,5 +85,33 @@ public class PageService {
 
 		// 查询成功
 		return new QueryResponseResult(CommonCode.SUCCESS, queryResult);
+	}
+
+	/**
+	 * 添加页面
+	 * @param cmsPage
+	 * @return
+	 */
+	public CmsPageResult add(CmsPage cmsPage) {
+		// cms_page集中上创建页面名称、站点Id、页面webpath为唯一索引
+		// 通过这三个条件可以确认一个唯一的页面。
+		// 所以添加页面之前需要判断要添加的页面是否已经存在。
+		CmsPage cmsPageInfo = cmsPageRepository.findByPageNameAndSiteIdAndPageWebPath(
+				cmsPage.getPageName(),
+				cmsPage.getSiteId(),
+				cmsPage.getPageWebPath());
+
+		if (Objects.isNull(cmsPage)) { // 如果为空表明保存的页面不存在，可以进行保存。
+			// 为了避免传入的id有值，设置id为null让mongodb生成id。
+			cmsPage.setPageId(null);
+			// 保存后会将生成的id封装在返回的对象中。
+			CmsPage saveCmsPageInfo = cmsPageRepository.save(cmsPage);
+
+			// 返回正确信息和保存成功的cmsPage
+			return new CmsPageResult(CommonCode.SUCCESS, saveCmsPageInfo);
+		}
+
+		// 表示不能保存返回错误信息
+		return new CmsPageResult(CommonCode.FAIL, null);
 	}
 }

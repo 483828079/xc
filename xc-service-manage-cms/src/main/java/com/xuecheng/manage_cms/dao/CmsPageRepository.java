@@ -28,4 +28,9 @@ public interface CmsPageRepository extends MongoRepository<CmsPage,String> {
 	 * @return 分页查询的返回值为Page，Page封装了分页的信息。
 	 */
 	Page<CmsPage> findBySiteIdAndPageType(String siteId, String pageType, Pageable pageable);
+
+	/**
+	 * 根据页面名称、站点Id、页面webpath查询
+	 * */
+	CmsPage findByPageNameAndSiteIdAndPageWebPath(String pageName, String siteId, String pageWebPath);
 }
