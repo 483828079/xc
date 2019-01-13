@@ -6,10 +6,7 @@ import com.xuecheng.manage_cms.dao.CmsPageRepository;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.junit.*;
 
@@ -111,6 +108,26 @@ public class CmsPageRepositoryTest {
     public void testfindBySiteIdAndPageType() throws Exception{
         Pageable pageable = PageRequest.of(0, 2, new Sort(Sort.Direction.DESC, "siteId"));
         Page<CmsPage> page = cmsPageRepository.findBySiteIdAndPageType("233", "1", pageable);
+        List<CmsPage> cmsPageList = page.getContent();
+        int totalPages = page.getTotalPages();
+        long totalElements = page.getTotalElements();
+    }
+
+    @Test
+    public void testFindAllByExample() throws Exception{
+        Pageable pageable = PageRequest.of(0, 2);
+        CmsPage cmsPage = new CmsPage();
+        // cmsPage.setSiteId("5a751fab6abb5044e0d19ea1"); //添加条件按照siteId查询。
+        // cmsPage.setTemplateId("5a925be7b00ffc4b3c1578b5"); // 按照模板id查询。
+        cmsPage.setPageAliase("轮播图"); // 按照页面别名模糊查询
+
+        ExampleMatcher matching = ExampleMatcher.matching()
+                // 设置pageName的匹配方式，包含。在cmsPage中的其他属性不设置就是精确查询。
+                .withMatcher("pageAliase" ,ExampleMatcher.GenericPropertyMatchers.contains());
+        // 按条件查询，第一个参数封装查询条件的对象，第二个参数封装匹配方式。
+        // 如果不设置匹配方式默认按照精确匹配。
+        Example example = Example.of(cmsPage, matching);
+        Page<CmsPage> page = cmsPageRepository.findAll(example, pageable);
         List<CmsPage> cmsPageList = page.getContent();
         int totalPages = page.getTotalPages();
         long totalElements = page.getTotalElements();
