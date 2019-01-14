@@ -13,6 +13,7 @@ import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class PageService {
@@ -115,5 +116,24 @@ public class PageService {
 
 		// 表示不能保存返回错误信息
 		return new CmsPageResult(CommonCode.FAIL, null);
+	}
+
+	/**
+	 * 根据id查询cmsPage
+	 * @param id
+	 * @return
+	 */
+	public CmsPage findById(String id) {
+		Optional<CmsPage> cmsPageOptional = cmsPageRepository.findById(id);
+		// 如果查询到的cmsPage不为null
+		if (cmsPageOptional.isPresent()) {
+			return cmsPageOptional.get();
+		}
+		// 如果没有查询到就返回null
+		return null;
+	}
+
+	public CmsPageResult update(String id, CmsPage cmsPage) {
+		return null;
 	}
 }

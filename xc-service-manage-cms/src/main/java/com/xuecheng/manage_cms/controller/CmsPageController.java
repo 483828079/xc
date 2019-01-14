@@ -34,12 +34,12 @@ public class CmsPageController implements CmsPageControllerApi {
 	@Override
 	@GetMapping("/findById/{id}")
 	public CmsPage findById(@PathVariable("id") String id) {
-		return null;
+		return pageService.findById(id);
 	}
 
 	@Override
 	@PostMapping("/edit/{id}")
 	public CmsPageResult edit(@PathVariable("id") String id, @RequestBody CmsPage cmsPage) {
-		return null;
+		return pageService.update(id, cmsPage);
 	}
 }
