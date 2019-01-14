@@ -109,13 +109,14 @@ public class PageService {
 			cmsPage.setPageId(null);
 			// 保存后会将生成的id封装在返回的对象中。
 			CmsPage saveCmsPageInfo = cmsPageRepository.save(cmsPage);
-
-			// 返回正确信息和保存成功的cmsPage
-			return new CmsPageResult(CommonCode.SUCCESS, saveCmsPageInfo);
+			if (! Objects.isNull(saveCmsPageInfo)) {
+				// 返回正确信息和保存成功的cmsPage
+				return new CmsPageResult(CommonCode.SUCCESS, saveCmsPageInfo);
+			}
 		}
 
 		// 表示不能保存返回错误信息
-		return new CmsPageResult(CommonCode.FAIL, null);
+		return new CmsPageResult(CommonCode.FAIL);
 	}
 
 	/**
@@ -133,7 +134,54 @@ public class PageService {
 		return null;
 	}
 
+	/**
+	 * 修改id对应的cmsPage
+	 * @param id
+	 * @param cmsPage
+	 * @return
+	 */
 	public CmsPageResult update(String id, CmsPage cmsPage) {
-		return null;
+		// 判断要修改的cmsPage是否已经存在，存在才可以修改。
+		CmsPage cmsPageInfo = this.findById(id);
+		if (! Objects.isNull(cmsPageInfo)) { // 存在允许修改。
+			// 后端对表单的校验
+			if (StringUtils.isEmpty(cmsPage.getTemplateId()) ||
+			StringUtils.isEmpty(cmsPage.getSiteId()) ||
+			StringUtils.isEmpty(cmsPage.getPageAliase()) ||
+			StringUtils.isEmpty(cmsPage.getPageName()) ||
+			StringUtils.isEmpty(cmsPage.getPageWebPath()) ||
+			StringUtils.isEmpty(cmsPage.getPagePhysicalPath())) {
+				return new CmsPageResult(CommonCode.FAIL);
+			}
+
+			// 因为是修改不是添加，所以id要存在
+			// 前端传来的不一定是所有属性，所以要根据传来id查询所有属性。
+			// 然后对当前id对应实体部分属性进行修改
+
+			//更新模板id
+			cmsPageInfo.setTemplateId(cmsPage.getTemplateId());
+			//更新所属站点
+			cmsPageInfo.setSiteId(cmsPage.getSiteId());
+			//更新页面别名
+			cmsPageInfo.setPageAliase(cmsPage.getPageAliase());
+			//更新页面名称
+			cmsPageInfo.setPageName(cmsPage.getPageName());
+			//更新访问路径
+			cmsPageInfo.setPageWebPath(cmsPage.getPageWebPath());
+			//更新物理路径
+			cmsPageInfo.setPagePhysicalPath(cmsPage.getPagePhysicalPath());
+
+			//执行更新,save执行成功会返回保存的对象和生成的id。
+			CmsPage saveCmsPageInfo = cmsPageRepository.save(cmsPageInfo);
+			if (! Objects.isNull(saveCmsPageInfo)) {
+				return new CmsPageResult(CommonCode.SUCCESS, saveCmsPageInfo);
+			}
+
+			// 保存失败
+			return new CmsPageResult(CommonCode.FAIL);
+		}
+
+		// 不存在，所以不能修改
+		return new CmsPageResult(CommonCode.FAIL);
 	}
 }

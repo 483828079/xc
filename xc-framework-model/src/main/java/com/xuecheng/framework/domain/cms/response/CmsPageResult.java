@@ -15,4 +15,9 @@ public class CmsPageResult extends ResponseResult {
         super(resultCode);
         this.cmsPage = cmsPage;
     }
+
+    public CmsPageResult(ResultCode resultCode) {
+        super(resultCode);
+        this.cmsPage = null;
+    }
 }
