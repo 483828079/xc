@@ -32,7 +32,7 @@ public class CmsPageController implements CmsPageControllerApi {
 	}
 
 	@Override
-	@GetMapping("/findById/{id}")
+	@GetMapping("/get/{id}")
 	public CmsPage findById(@PathVariable("id") String id) {
 		return pageService.findById(id);
 	}
@@ -44,7 +44,7 @@ public class CmsPageController implements CmsPageControllerApi {
 	 * @return
 	 */
 	@Override
-	@PostMapping("/edit/{id}") // 修改需要使用post请求
+	@PutMapping("/edit/{id}") // 修改需要使用put请求
 	public CmsPageResult edit(@PathVariable("id") String id, @RequestBody CmsPage cmsPage) {
 		return pageService.update(id, cmsPage);
 	}
