@@ -37,8 +37,14 @@ public class CmsPageController implements CmsPageControllerApi {
 		return pageService.findById(id);
 	}
 
+	/**
+	 *
+	 * @param id 从url中获取
+	 * @param cmsPage cmsPage从请求体中的json字符串转换
+	 * @return
+	 */
 	@Override
-	@PostMapping("/edit/{id}")
+	@PostMapping("/edit/{id}") // 修改需要使用post请求
 	public CmsPageResult edit(@PathVariable("id") String id, @RequestBody CmsPage cmsPage) {
 		return pageService.update(id, cmsPage);
 	}
