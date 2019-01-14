@@ -39,4 +39,21 @@ public interface CmsPageControllerApi {
 	 * CmsPageResult封装了针对CMS的响应，有状态信息和cmsPage
 	 * */
 	public CmsPageResult add(CmsPage cmsPage);
+
+	/**
+	 * 通过id查询页面
+	 * @param id
+	 * @return 查询到的cmsPage
+	 */
+	@ApiOperation("通过ID查询页面")
+	public CmsPage findById(String id);
+
+	/**
+	 * 根据id查找，根据cmsPage修改。
+	 * @param id
+	 * @param cmsPage
+	 * @return CMS对应的响应，状态和修改成功的对象。
+	 */
+	@ApiOperation("修改页面")
+	public CmsPageResult edit(String id,CmsPage cmsPage);
 }

@@ -21,8 +21,9 @@ public class PageService {
 
 	/**
 	 * 页面列表分页查询
-	 * @param page 当前页码
-	 * @param size 页面显示个数
+	 *
+	 * @param page             当前页码
+	 * @param size             页面显示个数
 	 * @param queryPageRequest 查询条件
 	 * @return 页面列表
 	 */
@@ -89,6 +90,7 @@ public class PageService {
 
 	/**
 	 * 添加页面
+	 *
 	 * @param cmsPage
 	 * @return
 	 */
