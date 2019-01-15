@@ -51,8 +51,8 @@ public class CmsPageController implements CmsPageControllerApi {
 	}
 
 	@Override
-	@DeleteMapping("/del") // 删除用delete请求
-	public ResponseResult delete(String id) {
+	@DeleteMapping("/del/{id}") // 删除用delete请求
+	public ResponseResult delete(@PathVariable("id") String id) {
 		return pageService.delete(id);
 	}
 }
