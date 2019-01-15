@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.Objects;
+
 /**
  * 捕获全局异常。
  * 包含了@Component 组件。可以通过扫描加入bean。
@@ -70,12 +72,22 @@ public class ExceptionCatch {
 
         // 判断当前异常是否存在于ImmutableMap
         // 如果存在取出异常信息返回。
-        if (EXCEPTIONS.containsKey(exception.getClass())) {
-            // 存在将当前信息响应到页面。
-            return new ResponseResult(EXCEPTIONS.get(exception.getClass()));
-        }
 
-        // 不存在,抛出一个通用的信息。系统繁忙。。。
-        return new ResponseResult(CommonCode.SERVER_ERROR);
+		// 使用get获取再判断获取到的是不是null，比判断key是否存在集合中效率更高。
+		final ResultCode resultCode = EXCEPTIONS.get(exception.getClass());
+        // final修饰只能被初始化一次。
+		final ResponseResult responseResult;
+
+		// 判断是否能够获取到
+        if (! Objects.isNull(resultCode)) {
+            // 存在将当前信息响应到页面。
+            responseResult = new ResponseResult(resultCode);
+        } else {
+			// 不存在,抛出一个通用的信息。系统繁忙。。。
+			responseResult = new ResponseResult(CommonCode.SERVER_ERROR);
+		}
+
+        // 响应到页面。
+        return responseResult;
     }
 }
