@@ -2,7 +2,9 @@ package com.xuecheng.manage_cms.service;
 
 import com.xuecheng.framework.domain.cms.CmsPage;
 import com.xuecheng.framework.domain.cms.request.QueryPageRequest;
+import com.xuecheng.framework.domain.cms.response.CmsCode;
 import com.xuecheng.framework.domain.cms.response.CmsPageResult;
+import com.xuecheng.framework.exception.CustomException;
 import com.xuecheng.framework.model.response.CommonCode;
 import com.xuecheng.framework.model.response.QueryResponseResult;
 import com.xuecheng.framework.model.response.QueryResult;
@@ -105,15 +107,19 @@ public class PageService {
 				cmsPage.getSiteId(),
 				cmsPage.getPageWebPath());
 
-		if (Objects.isNull(cmsPageInfo)) { // 如果为空表明保存的页面不存在，可以进行保存。
-			// 为了避免传入的id有值，设置id为null让mongodb生成id。
-			cmsPage.setPageId(null);
-			// 保存后会将生成的id封装在返回的对象中。
-			CmsPage saveCmsPageInfo = cmsPageRepository.save(cmsPage);
-			if (! Objects.isNull(saveCmsPageInfo)) {
-				// 返回正确信息和保存成功的cmsPage
-				return new CmsPageResult(CommonCode.SUCCESS, saveCmsPageInfo);
-			}
+		// 如果页面已经存在抛出自定义异常
+		if (Objects.isNull(cmsPageInfo)) {
+			// 抛出异常，设置异常状态信息。
+			throw new CustomException(CmsCode.CMS_ADDPAGE_EXISTSNAME);
+		}
+
+		// 为了避免传入的id有值，设置id为null让mongodb生成id。
+		cmsPage.setPageId(null);
+		// 保存后会将生成的id封装在返回的对象中。
+		CmsPage saveCmsPageInfo = cmsPageRepository.save(cmsPage);
+		if (! Objects.isNull(saveCmsPageInfo)) {
+			// 返回正确信息和保存成功的cmsPage
+			return new CmsPageResult(CommonCode.SUCCESS, saveCmsPageInfo);
 		}
 
 		// 表示不能保存返回错误信息
