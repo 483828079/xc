@@ -11,6 +11,7 @@ import lombok.ToString;
 
 @ToString
 public enum CommonCode implements ResultCode{
+    FOROMINPUT_NOTEXISTS(false,10004,"请正确填写表单内容！"),
     SUCCESS(true,10000,"操作成功！"),
     FAIL(false,11111,"操作失败！"),
     UNAUTHENTICATED(false,10001,"此操作需要登陆系统！"),

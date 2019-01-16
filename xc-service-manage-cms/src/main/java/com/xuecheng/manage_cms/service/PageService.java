@@ -56,6 +56,16 @@ public class PageService {
 			cmsPage.setPageAliase(queryPageRequest.getPageAliase());
 		}
 
+		// pageName
+		if (StringUtils.isNotEmpty(queryPageRequest.getPageName())) {
+			cmsPage.setPageName(queryPageRequest.getPageName());
+		}
+
+		// pageType(1,0)
+		if (StringUtils.isNotEmpty(queryPageRequest.getPageType())) {
+			cmsPage.setPageType(queryPageRequest.getPageType());
+		}
+
 		// 默认从第一页开始。
 		if (page <= 0) {
 			page = 1;
@@ -73,7 +83,9 @@ public class PageService {
 		// 匹配方式
 		ExampleMatcher exampleMatcher = ExampleMatcher.matching()
 				//pageAliase模糊查询。
-				.withMatcher("pageAliase", ExampleMatcher.GenericPropertyMatchers.contains());
+				.withMatcher("pageAliase", ExampleMatcher.GenericPropertyMatchers.contains())
+				//pageName模糊查询。
+				.withMatcher("pageName", ExampleMatcher.GenericPropertyMatchers.contains());
 		// 将cms对象中不为null的属性作为条件进行查询
 		// 属性名等同于mongodb中的field。
 		Example example = Example.of(cmsPage, exampleMatcher);
@@ -111,6 +123,18 @@ public class PageService {
 		if (!Objects.isNull(cmsPageInfo)) {
 			// 抛出异常，设置异常状态信息。
 			ExceptionCast.cast(CmsCode.CMS_ADDPAGE_EXISTSNAME);
+		}
+
+		// 后端对表单的校验
+		if (StringUtils.isEmpty(cmsPage.getTemplateId()) ||
+				StringUtils.isEmpty(cmsPage.getSiteId()) ||
+				StringUtils.isEmpty(cmsPage.getPageAliase()) ||
+				StringUtils.isEmpty(cmsPage.getPageName()) ||
+				StringUtils.isEmpty(cmsPage.getPageWebPath()) ||
+				StringUtils.isEmpty(cmsPage.getPagePhysicalPath()) ||
+				StringUtils.isEmpty(cmsPage.getDataUrl())) {
+			// 抛出自定义异常。
+			ExceptionCast.cast(CommonCode.FOROMINPUT_NOTEXISTS);
 		}
 
 		// 为了避免传入的id有值，设置id为null让mongodb生成id。
@@ -153,8 +177,10 @@ public class PageService {
 			StringUtils.isEmpty(cmsPage.getPageAliase()) ||
 			StringUtils.isEmpty(cmsPage.getPageName()) ||
 			StringUtils.isEmpty(cmsPage.getPageWebPath()) ||
-			StringUtils.isEmpty(cmsPage.getPagePhysicalPath())) {
-				return new CmsPageResult(CommonCode.FAIL);
+			StringUtils.isEmpty(cmsPage.getPagePhysicalPath()) ||
+			StringUtils.isEmpty(cmsPage.getDataUrl())) {
+				// 抛出自定义异常。
+				ExceptionCast.cast(CommonCode.FOROMINPUT_NOTEXISTS);
 			}
 
 			// 因为是修改不是添加，所以id要存在
@@ -173,6 +199,8 @@ public class PageService {
 			cmsPageInfo.setPageWebPath(cmsPage.getPageWebPath());
 			//更新物理路径
 			cmsPageInfo.setPagePhysicalPath(cmsPage.getPagePhysicalPath());
+			//更新dataUrl
+			cmsPageInfo.setDataUrl(cmsPage.getDataUrl());
 
 			//执行更新,save执行成功会返回保存的对象和生成的id。
 			CmsPage saveCmsPageInfo = cmsPageRepository.save(cmsPageInfo);

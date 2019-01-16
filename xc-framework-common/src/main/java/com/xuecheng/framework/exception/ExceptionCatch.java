@@ -27,10 +27,12 @@ public class ExceptionCatch {
     // 使用EXCEPTIONS存放异常类型和错误代码的映射，ImmutableMap的特点的一旦创建不可改变，并且线程安全
     // 记录错误类和错误信息。
     private static ImmutableMap<Class<? extends Throwable>, ResultCode> EXCEPTIONS;
-    //使用builder来构建一个异常类型和错误代码的异常
+    // 使用builder来构建一个异常类型和错误代码的异常
+    // ImmutableMap.Builder建造ImmutableMap，构成ImmutableMap的信息存入ImmutableMap.Builder。
+    // ImmutableMap创建完毕不能修改，只读，性能好，线程安全。
     protected static ImmutableMap.Builder<Class<? extends Throwable>,ResultCode> builder = ImmutableMap.builder();
 
-    // 初始化ImmutableMap
+    // 初始化ImmutableMap信息
     static{
         //在这里加入一些基础的异常类型判断
         builder.put(HttpMessageNotReadableException.class, CommonCode.INVALID_PARAM);
