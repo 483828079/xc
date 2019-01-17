@@ -118,4 +118,55 @@ public class TemplateService {
 
 		return new ResponseResult(CommonCode.SUCCESS);
 	}
+
+
+	public CmsTemplate findById(String id) {
+		Optional<CmsTemplate> optionalCmsTemplate = cmsTemplateRepository.findById(id);
+		if (! optionalCmsTemplate.isPresent()) {
+			ExceptionCast.cast(CmsCode.CMS_TEMPLATE_NOTEXISTS);
+		}
+
+		CmsTemplate cmsTemplate = optionalCmsTemplate.get();
+		return cmsTemplate;
+	}
+
+	public CmsTemplateResult update(String id, CmsTemplate cmsTemplate) {
+		// 表单校验
+		if (StringUtils.isEmpty(cmsTemplate.getTemplateName()) ||
+				StringUtils.isEmpty(cmsTemplate.getSiteId()) ||
+				StringUtils.isEmpty(cmsTemplate.getTemplateParameter()) ||
+				StringUtils.isEmpty(cmsTemplate.getTemplateFileId())) {
+			ExceptionCast.cast(CommonCode.INVALID_PARAM);
+		}
+
+		Optional<CmsTemplate> optionalCmsTemplate = cmsTemplateRepository.findById(id);
+		if (optionalCmsTemplate.isPresent()) {
+			CmsTemplate cmsTemplateInfo = optionalCmsTemplate.get();
+			if (StringUtils.isNotEmpty(cmsTemplate.getSiteId())) {
+				cmsTemplateInfo.setSiteId(cmsTemplate.getSiteId());
+			}
+
+			if (StringUtils.isNotEmpty(cmsTemplate.getTemplateName())) {
+				cmsTemplateInfo.setTemplateName(cmsTemplate.getTemplateName());
+			}
+
+			if (StringUtils.isNotEmpty(cmsTemplate.getTemplateParameter())) {
+				cmsTemplateInfo.setTemplateName(cmsTemplate.getTemplateParameter());
+			}
+
+			if (StringUtils.isNotEmpty(cmsTemplate.getTemplateFileId())) {
+				cmsTemplateInfo.setTemplateParameter(cmsTemplate.getTemplateParameter());
+			}
+
+			// 更新
+			CmsTemplate saveCmsTemplate = cmsTemplateRepository.save(cmsTemplateInfo);
+			if (Objects.isNull(saveCmsTemplate)) {
+				ExceptionCast.cast(CommonCode.UPDATE_FAIL);
+			}
+
+			// 更新成功
+			return new CmsTemplateResult(CommonCode.SUCCESS, saveCmsTemplate);
+		}
+		return new CmsTemplateResult(CommonCode.SAVE_FAIL);
+	}
 }

@@ -32,6 +32,16 @@ public class CmsTemplateController implements CmsTemplateControllerApi {
 		return templateService.add(cmsTemplate);
 	}
 
+	@GetMapping("/get/{id}")
+	public CmsTemplate findById(@PathVariable("id") String id) {
+		return templateService.findById(id);
+	}
+
+	@PutMapping("/edit/{id}")
+	public CmsTemplateResult edit(@PathVariable String id, @RequestBody CmsTemplate cmsTemplate) {
+		return templateService.update(id, cmsTemplate);
+	}
+
 	@DeleteMapping("/del/{id}")
 	public ResponseResult delete(@PathVariable("id") String id) {
 		return templateService.delete(id);

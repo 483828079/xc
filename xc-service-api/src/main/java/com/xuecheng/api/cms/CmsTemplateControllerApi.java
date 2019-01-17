@@ -25,6 +25,12 @@ public interface CmsTemplateControllerApi {
 	@ApiOperation("添加模板")
 	public CmsTemplateResult add(CmsTemplate cmsTemplate);
 
+	@ApiOperation("通过ID查询模板")
+	public CmsTemplate findById(String id);
+
+	@ApiOperation("修改模板")
+	public CmsTemplateResult edit(String id, CmsTemplate cmsTemplate);
+
 	@ApiOperation("通过ID删除模板")
 	public ResponseResult delete(String id);
 }
