@@ -7,3 +7,7 @@ spring:
     mongodb:
       uri:  mongodb://root:123@localhost:27017 # mongodb 的服务地址
       database: xc_cms                          # 需要操作的数据库名称
+  freemarker:
+    cache: false  # 关闭模板缓存，方便测试
+    settings:
+      template_update_delay: 0 # 即时更新

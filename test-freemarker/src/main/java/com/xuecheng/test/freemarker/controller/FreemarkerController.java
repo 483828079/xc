@@ -1,14 +1,20 @@
 package com.xuecheng.test.freemarker.controller;
 
 import com.xuecheng.test.freemarker.model.Student;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
 
 @RequestMapping("/freemarker")
 @Controller
 public class FreemarkerController {
+
+	@Autowired
+	RestTemplate restTemplate;
 	/**
 	 * freemarker作为springmvc一种视图格式，
 	 * 默认情况下SpringMVC支持freemarker视图格式。
@@ -31,7 +37,6 @@ public class FreemarkerController {
 		stu2.setName("小红");
 		stu2.setMondy(200.1f);
 		stu2.setAge(19);
-		//
 		stu2.setBirthday(new Date());
 		List<Student> friends = new ArrayList<>();
 		friends.add(stu1);
@@ -50,7 +55,15 @@ public class FreemarkerController {
 		map.put("stu1",stu1);
 		//向数据模型放数据
 		map.put("stuMap",stuMap);
+		map.put("point", 102920122);
 		//返回模板文件名称, 默认会去classpath下找视图文件。
 		return "test1";
+	}
+
+	@RequestMapping("/banner")
+	public String index_banner(Map<String, Object> map) {
+		ResponseEntity<Map> forEntity = restTemplate.getForEntity("http://localhost:31001/cms/config/getmodel/5a791725dd573c3574ee333f ", Map.class);
+		map.putAll(forEntity.getBody());
+		return "index_banner";
 	}
 }

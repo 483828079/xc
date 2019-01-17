@@ -16,6 +16,12 @@ public class BaseController {
 
     protected HttpSession session;
 
+    /**
+     * @ModelAttribute 会在每个Controller方法执行前执行
+     * 初始化Servlet对象。
+     * @param request
+     * @param response
+     */
     @ModelAttribute
     public void setReqAndRes(HttpServletRequest request, HttpServletResponse response) {
 
@@ -24,6 +30,5 @@ public class BaseController {
         this.response = response;
 
         this.session = request.getSession();
-
     }
 }

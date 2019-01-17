@@ -1,15 +1,13 @@
-package com.xuecheng.manage_cms;
+package com.xuecheng.manage_cms.dao;
 
 import com.xuecheng.framework.domain.cms.CmsPage;
 import com.xuecheng.framework.domain.cms.CmsPageParam;
-import com.xuecheng.manage_cms.dao.CmsPageRepository;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.*;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.junit.*;
-
 
 import java.util.ArrayList;
 import java.util.Date;

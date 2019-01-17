@@ -125,6 +125,22 @@
     显示时分秒：${today?time}
     显示日期+时间：${today?datetime} <br>
     自定义格式化： ${today?string("yyyy年MM月")}-->
+
+    <#--内建函数c-->
+    <#--
+        point是数字型，使用${point}会显示这个数字的值，
+        不并每三位使用逗号分隔。
+        如果不想显示为每三位分隔的数字，可以使用c函数将数字型转成字符串输出
+    -->
+    ${point?c}
+
+
+    <#--将json字符串转换为对象
+        assign 定义一个变量
+    -->
+    <#assign text="{'bank':'工商银行','account':'10101920201920212'}" />
+    <#assign data=text?eval />
+    开户行：${data.bank} 账号：${data.account}
 </table>
 </body>
 </html>

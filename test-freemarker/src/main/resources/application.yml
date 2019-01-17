@@ -13,7 +13,7 @@ spring:
       #FreeMarker是会缓存模板的。当调用getTemplate方法时，
       #FreeMarker不但返回了Template对象的结果，而且还会将它存储在缓存中，
       #当下一次再以相同路径调用getTemplate方法时，
-      #那么它只返回缓存的Tempalte实例，而不会再次加载和解析模板文件。
+      #那么它只返回缓存的Template实例，而不会再次加载和解析模板文件。
 
       #如果更改了模板文件，当下次调用模板时，FreeMarker会自动重新载入和解析模板。
       #要检查模板文件是否改变内容了是需要时间的，
