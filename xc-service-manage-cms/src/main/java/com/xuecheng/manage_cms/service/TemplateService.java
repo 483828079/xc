@@ -151,11 +151,11 @@ public class TemplateService {
 			}
 
 			if (StringUtils.isNotEmpty(cmsTemplate.getTemplateParameter())) {
-				cmsTemplateInfo.setTemplateName(cmsTemplate.getTemplateParameter());
+				cmsTemplateInfo.setTemplateParameter(cmsTemplate.getTemplateParameter());
 			}
 
 			if (StringUtils.isNotEmpty(cmsTemplate.getTemplateFileId())) {
-				cmsTemplateInfo.setTemplateParameter(cmsTemplate.getTemplateParameter());
+				cmsTemplateInfo.setTemplateFileId(cmsTemplate.getTemplateFileId());
 			}
 
 			// 更新
