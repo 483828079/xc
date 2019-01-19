@@ -16,7 +16,10 @@ public enum CmsCode implements ResultCode {
     CMS_GENERATEHTML_SAVEHTMLERROR(false,24006,"保存静态html出错！"),
     CMS_COURSE_PERVIEWISNULL(false,24007,"预览页面为空！"),
     CMS_PAGE_NOTEXISTS(false,24008,"页面不存在！"),
-    CMS_TEMPLATE_NOTEXISTS(false,24009,"模板不存在！");
+    CMS_TEMPLATE_NOTEXISTS(false,24009,"模板不存在！"),
+    CMS_SITE_PHYSICAL_PATH_NOTEXISTS(false,24011,"站点物理路径不存在！"),
+    CMS_PAGE_PHYSICAL_PATH_NOTEXISTS(false,24012,"页面物理路径不存在！"),
+    CMS_SIT_NOTEXISTS(false,24010,"站点不存在！");
     //操作代码
     boolean success;
     //操作代码

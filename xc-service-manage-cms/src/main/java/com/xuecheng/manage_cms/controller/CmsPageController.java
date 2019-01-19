@@ -55,4 +55,14 @@ public class CmsPageController implements CmsPageControllerApi {
 	public ResponseResult delete(@PathVariable("id") String id) {
 		return pageService.delete(id);
 	}
+
+	/**
+	 * 发布页面(生成page对应的静态页面然后替换掉原来的页面)
+	 * @param pageId
+	 * @return
+	 */
+	@PostMapping("/postPage/{pageId}")
+	public ResponseResult post(@PathVariable("pageId") String pageId) {
+		return pageService.postPage(pageId);
+	}
 }
