@@ -32,3 +32,10 @@ xuecheng:
 
 # 需要其它服务提供消息的时候还可以使用该Exchange，再绑定多个Queue。
 # 使用该服务的站点作为routeKey。让Product监听对应Queue即可。
+
+# 为什么队列名称不能重复？
+# 因为现在需要的是不同的cms_client都能接收到同样的消息。
+# 不同的client接收到不同的消息。
+# client同不同样使用routeKey来区别。
+# 如果多个Product监听同一个Queue，只会轮序。达不到能够接收到同样消息的要求。
+# 所以同样的client每个都需要对应着一个Queue。这些Queue绑定Exchange的routeKey相同就能够接收到同样的消息。
