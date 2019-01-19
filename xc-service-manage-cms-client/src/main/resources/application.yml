@@ -1,0 +1,34 @@
+server:
+  port: 31000
+spring:
+  application:
+    name: xc-service-manage-cms-client
+  data:
+    mongodb:
+      uri:  mongodb://root:123@localhost:27017
+      database: xc_cms
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
+    virtualHost: /
+xuecheng:
+  mq:
+    #cms客户端监控的队列名称（不同的客户端监控的队列不能重复）
+    queue: queue_cms_postpage_01
+    routingKey: 5a751fab6abb5044e0d19ea1    #此routingKey为门户站点ID
+
+# 使用route类型的Exchange
+# queue 队列名称，也就是该客户端需要监听的Queue名称.
+# routeKey 也就是Exchange和Queue绑定时的routeKey，该队列只能接受到对应routeKey的消息。
+# 当前服务使用siteId作为routeKey。
+
+# cms_client的作用是下载gridFs上的静态页面到nginx代理的页面上。
+# client会有多个，nginx负载均衡反向代理多个页面。
+# 同一台服务器上可以有一个cms_client用来接受消息，下载html到nginx代理的目录。
+# 所以一个client对应着一个Queue，多个cms_client的routeKey都是相同的因为页面内容一样。
+# 一个Exchange对应着多个cms_client。
+
+# 需要其它服务提供消息的时候还可以使用该Exchange，再绑定多个Queue。
+# 使用该服务的站点作为routeKey。让Product监听对应Queue即可。
