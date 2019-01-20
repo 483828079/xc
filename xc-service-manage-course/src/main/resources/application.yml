@@ -7,7 +7,7 @@ spring:
     druid:
       url: jdbc:mysql://localhost:3306/xc_course?characterEncoding=utf-8
       username: root
-      password: mysql
+      password: 123
       driverClassName: com.mysql.jdbc.Driver
       initialSize: 5  #初始建立连接数量
       minIdle: 5  #最小连接数量
@@ -17,3 +17,18 @@ spring:
       testOnReturn: false #归还连接时检测连接是否有效
       timeBetweenEvictionRunsMillis: 60000 #配置间隔检测连接是否有效的时间（单位是毫秒）
       minEvictableIdleTimeMillis: 300000  #连接在连接池的最小生存时间（毫秒）
+
+  # jpa都是一些生成表的策略什么的。。。也用的dataSource
+  # 会扫描@Entity注解的实体类和表建立关联，也可以设置主键的生成策略。
+  jpa:
+    show-sql: true # 显示sql
+    properties:
+      hibernate:
+        format_sql: true # 格式化SQL
+
+
+# mybatis整合只需要知道Mapper接口的位置
+# 如果Mapper配置文件和Mapper接口路径一致不需要修改。
+# @Mapper可以连Mapper接口配置都省了。
+mybatis:
+  type-aliases-package: com.xuecheng.framework.domain.course # 配置别名

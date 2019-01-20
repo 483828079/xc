@@ -15,6 +15,7 @@ import java.util.Date;
 @ToString
 @Entity
 @Table(name="course_index")
+/*assigned [ 手工分配主键ID值 ]*/
 @GenericGenerator(name = "jpa-assigned", strategy = "assigned")
 public class CourseIndex implements Serializable {
     private static final long serialVersionUID = -916357110051689587L;

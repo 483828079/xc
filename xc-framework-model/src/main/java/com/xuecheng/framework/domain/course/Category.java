@@ -14,6 +14,7 @@ import java.io.Serializable;
 @ToString
 @Entity
 @Table(name="category")
+/*assigned [ 手工分配主键ID值 ]*/
 @GenericGenerator(name = "jpa-assigned", strategy = "assigned")
 //@GenericGenerator(name = "jpa-uuid", strategy = "uuid")
 public class Category implements Serializable {

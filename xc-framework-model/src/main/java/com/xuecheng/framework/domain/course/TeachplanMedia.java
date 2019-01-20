@@ -14,6 +14,7 @@ import java.io.Serializable;
 @ToString
 @Entity
 @Table(name="teachplan_media")
+/*assigned [ 手工分配主键ID值 ]*/
 @GenericGenerator(name = "jpa-assigned", strategy = "assigned")
 public class TeachplanMedia implements Serializable {
     private static final long serialVersionUID = -916357110051689485L;

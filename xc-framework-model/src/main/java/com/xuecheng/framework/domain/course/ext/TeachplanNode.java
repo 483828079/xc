@@ -7,12 +7,10 @@ import lombok.ToString;
 import java.util.List;
 
 /**
- * Created by admin on 2018/2/7.
+ * 使用该拓展类查询，记录根节点所有子节点。
  */
 @Data
 @ToString
 public class TeachplanNode extends Teachplan {
-
     List<TeachplanNode> children;
-
 }

@@ -15,6 +15,7 @@ import java.util.Date;
 @ToString
 @Entity
 @Table(name="course_market")
+/**/
 @GenericGenerator(name = "jpa-assigned", strategy = "assigned")
 public class CourseMarket implements Serializable {
     private static final long serialVersionUID = -916357110051689486L;

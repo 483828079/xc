@@ -15,6 +15,7 @@ import java.io.Serializable;
 @Entity
 @Table(name="course_base")
 //@GenericGenerator(name = "jpa-assigned", strategy = "assigned")
+//uuid [ 32位16进制数的字符串 ]
 @GenericGenerator(name = "jpa-uuid", strategy = "uuid")
 public class CourseBase implements Serializable {
     private static final long serialVersionUID = -916357110051689486L;
