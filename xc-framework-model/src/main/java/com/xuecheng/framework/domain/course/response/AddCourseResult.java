@@ -16,5 +16,4 @@ public class AddCourseResult extends ResponseResult {
         this.courseid = courseid;
     }
     private String courseid;
-
 }
