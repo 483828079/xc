@@ -1,12 +1,19 @@
 package com.xuecheng.manage_course.service;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.xuecheng.framework.domain.course.CourseBase;
 import com.xuecheng.framework.domain.course.Teachplan;
+import com.xuecheng.framework.domain.course.ext.CourseInfo;
 import com.xuecheng.framework.domain.course.ext.TeachplanNode;
+import com.xuecheng.framework.domain.course.request.CourseListRequest;
 import com.xuecheng.framework.exception.ExceptionCast;
 import com.xuecheng.framework.model.response.CommonCode;
+import com.xuecheng.framework.model.response.QueryResponseResult;
+import com.xuecheng.framework.model.response.QueryResult;
 import com.xuecheng.framework.model.response.ResponseResult;
 import com.xuecheng.manage_course.dao.CourseBaseRepository;
+import com.xuecheng.manage_course.dao.CourseMapper;
 import com.xuecheng.manage_course.dao.TeachplanMapper;
 import com.xuecheng.manage_course.dao.TeachplanRepository;
 import org.apache.commons.lang3.StringUtils;
@@ -24,6 +31,8 @@ public class CourseService {
 	TeachplanMapper teachplanMapper;
 	@Autowired
 	CourseBaseRepository courseBaseRepository;
+	@Autowired
+	CourseMapper courseMapper;
 	@Autowired
 	TeachplanRepository teachplanRepository;
 
@@ -121,5 +130,23 @@ public class CourseService {
 
 		// 如果课程有根节点，返回根节点。
 		return teachplanList.get(0).getId();
+	}
+
+	/**
+	 * 分页查询课程列表
+	 * @param page 当前页
+	 * @param size 每页显示个数
+	 * @param courseListRequest 查询条件，以便后期拓展。
+	 * @return 响应(响应状态+分页信息)
+	 * CourseInfo 拓展字段，能够除了能够保存基本课程信息还能保存图片。
+	 */
+	public QueryResponseResult<CourseInfo> findCourseList(int page, int size, CourseListRequest courseListRequest) {
+		// 在执行第一条sql语句之前执行。
+		PageHelper.startPage(page, size);
+		Page<CourseInfo> courseInfoPage = courseMapper.findCourseListPage(courseListRequest);
+		QueryResult<CourseInfo> queryResult = new QueryResult<>();
+		queryResult.setTotal(courseInfoPage.getTotal());
+		queryResult.setList(courseInfoPage.getResult());
+		return new QueryResponseResult(CommonCode.SUCCESS, queryResult);
 	}
 }

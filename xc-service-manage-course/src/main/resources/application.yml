@@ -32,3 +32,6 @@ spring:
 # @Mapper可以连Mapper接口配置都省了。
 mybatis:
   type-aliases-package: com.xuecheng.framework.domain.course # 配置别名
+
+pagehelper:
+  helper-dialect: mysql  # mysql  pageHelper就是拼接分页sql语句的，所以要设置数据库类型。

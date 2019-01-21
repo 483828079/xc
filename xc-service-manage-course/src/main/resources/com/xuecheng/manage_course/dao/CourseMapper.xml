@@ -1,39 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.xuecheng.manage_course.dao.CourseMapper">
-    <!--one2many-->
-    <resultMap id="teachplanMap" type="com.xuecheng.framework.domain.course.ext.TeachplanNode">
-        <id property="id" column="aid"/>
-        <result property="pname" column="apname"/>
-        <collection property="children" ofType="com.xuecheng.framework.domain.course.ext.TeachplanNode">
-            <id property="id" column="bid"/>
-            <result property="pname" column="bpname"/>
-            <collection property="children" ofType="com.xuecheng.framework.domain.course.ext.TeachplanNode">
-                <id property="id" column="cid"/>
-                <result property="pname" column="cpname"/>
-            </collection>
-        </collection>
-    </resultMap>
-    <select id="selectList" parameterType="java.lang.String"
-            resultMap="teachplanMap">
-          SELECT
-          a.`id` aid,
-          a.`pname` apname,
-          b.`id` bid,
-          b.`pname` bpname,
-          c.`id` cid,
-          c.`pname` cpname
-        FROM
-        teachplan a LEFT JOIN teachplan b
-        ON a.id = b.parentid
-        LEFT JOIN teachplan c
-        ON b.id = c.parentid
-        WHERE  a.parentid = '0'
-        <if test="_parameter!=null and _parameter!=''">
-            and a.courseid=#{courseId}
-        </if>
-         ORDER BY a.orderby,
-          b.orderby,
-          c.orderby
-    </select>
+    <select id="findCourseListPage" resultType="com.xuecheng.framework.domain.course.ext.CourseInfo"
+            parameterType="com.xuecheng.framework.domain.course.request.CourseListRequest">
+    SELECT
+    course_base.*,
+    (SELECT pic FROM course_pic WHERE courseid = course_base.id) pic
+    FROM
+    course_base
+</select>
 </mapper>
