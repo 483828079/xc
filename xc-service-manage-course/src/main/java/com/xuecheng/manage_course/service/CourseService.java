@@ -238,8 +238,9 @@ public class CourseService {
 	 */
 	@Transactional
 	public ResponseResult updateCourseMarket(String id, CourseMarket courseMarket) {
-		CourseMarket courseMarketInfo = courseMarketRepository.getOne(id);
-		if (! Objects.isNull(courseMarketInfo)) {
+		Optional<CourseMarket> courseMarketOptional = courseMarketRepository.findById(id);
+		if (courseMarketOptional.isPresent()) {
+			CourseMarket courseMarketInfo = courseMarketOptional.get();
 			courseMarketInfo.setCharge(courseMarket.getCharge());
 			courseMarketInfo.setStartTime(courseMarket.getStartTime());//课程有效期，开始时间
 			courseMarketInfo.setEndTime(courseMarket.getEndTime());//课程有效期，结束时间
