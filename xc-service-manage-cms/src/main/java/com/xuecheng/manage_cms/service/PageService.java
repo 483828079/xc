@@ -499,4 +499,22 @@ public class PageService {
 		}
 		return null;
 	}
+
+	/**
+	 * 如果页面存在更新，不存在增加。
+	 * @param cmsPage
+	 * @return
+	 */
+	public CmsPageResult save(CmsPage cmsPage) {
+		//校验页面是否存在，根据页面名称、站点Id、页面webpath查询
+		CmsPage cmsPageInfo = cmsPageRepository.findByPageNameAndSiteIdAndPageWebPath(cmsPage.getPageName(), cmsPage.getSiteId(), cmsPage.getPageWebPath());
+
+		// 不存在，增加
+		if (Objects.isNull(cmsPageInfo)) {
+			return this.add(cmsPage);
+		}
+
+		// 存在修改
+		return this.update(cmsPage.getPageId(), cmsPage);
+	}
 }

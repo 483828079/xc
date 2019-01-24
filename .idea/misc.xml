@@ -21,12 +21,8 @@
         <option value="$PROJECT_DIR$/test-fastdfs/test-fastdfs/pom.xml" />
         <option value="$PROJECT_DIR$/test-fastdfs/pom.xml" />
         <option value="$PROJECT_DIR$/xc-service-base-filesystem/pom.xml" />
+        <option value="$PROJECT_DIR$/xc-govern-center/pom.xml" />
       </list>
-    </option>
-    <option name="ignoredFiles">
-      <set>
-        <option value="$PROJECT_DIR$/xc-framework-parent/test‐freemarker/pom.xml" />
-      </set>
     </option>
   </component>
   <component name="NodePackageJsonFileManager">

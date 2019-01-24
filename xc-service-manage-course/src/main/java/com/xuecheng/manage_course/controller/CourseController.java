@@ -3,11 +3,14 @@ package com.xuecheng.manage_course.controller;
 import com.xuecheng.api.course.CourseControllerApi;
 import com.xuecheng.framework.domain.course.CourseBase;
 import com.xuecheng.framework.domain.course.CourseMarket;
+import com.xuecheng.framework.domain.course.CoursePic;
 import com.xuecheng.framework.domain.course.Teachplan;
 import com.xuecheng.framework.domain.course.ext.CourseInfo;
+import com.xuecheng.framework.domain.course.ext.CourseView;
 import com.xuecheng.framework.domain.course.ext.TeachplanNode;
 import com.xuecheng.framework.domain.course.request.CourseListRequest;
 import com.xuecheng.framework.domain.course.response.AddCourseResult;
+import com.xuecheng.framework.domain.course.response.CoursePublishResult;
 import com.xuecheng.framework.model.response.QueryResponseResult;
 import com.xuecheng.framework.model.response.ResponseResult;
 import com.xuecheng.manage_course.service.CourseService;
@@ -94,5 +97,56 @@ public class CourseController implements CourseControllerApi {
     @PostMapping("/coursemarket/update/{id}")
     public ResponseResult updateCourseMarket(@PathVariable("id") String id, @RequestBody CourseMarket courseMarket) {
         return courseService.updateCourseMarket(id, courseMarket);
+    }
+
+    /**
+     * 关联课程和课程对应的图片
+     * @param courseId 课程id
+     * @param pic 课程图片
+     * @return 响应状态信息
+     */
+    @PostMapping("/coursepic/add")
+    public ResponseResult addCoursePic(@RequestParam("courseId") String courseId, @RequestParam("pic") String pic) {
+        return courseService.saveCoursePic(courseId, pic);
+    }
+
+    /**
+     * 根据课程id查询课程图片
+     * @param courseId
+     * @return
+     */
+    @GetMapping("/coursepic/list/{courseId}")
+    public CoursePic findCoursePic(@PathVariable String courseId) {
+        return courseService.findCoursepic(courseId);
+    }
+
+    /**
+     * 根据课程id删除课程图片
+     * @param courseId
+     * @return
+     */
+    @DeleteMapping("/coursepic/delete")
+    public ResponseResult deleteCoursePic(@RequestParam("courseId") String courseId) {
+        return courseService.deleteCoursePic(courseId);
+    }
+
+    /**
+     * 查询课程相关信息
+     * @param id 课程id
+     * @return
+     */
+    @GetMapping("/courseview/{id}")
+    public CourseView courseview(@PathVariable("id") String id) {
+        return courseService.getCourseView(id);
+    }
+
+    /**
+     * 课程详情页面预览
+     * @param id 要进行预览的courseId
+     * @return 预览的URL和响应状态信息
+     */
+    @PostMapping("/preview/{id}")
+    public CoursePublishResult preview(@PathVariable("id") String id) {
+        return courseService.preview(id);
     }
 }

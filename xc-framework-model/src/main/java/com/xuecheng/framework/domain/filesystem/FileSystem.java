@@ -14,7 +14,6 @@ import java.util.Map;
 @ToString
 @Document(collection = "filesystem")
 public class FileSystem {
-
     @Id
     private String fileId;
     //文件请求路径
@@ -37,5 +36,4 @@ public class FileSystem {
     private String filetag;
     //文件元信息
     private Map metadata;
-
 }

@@ -19,6 +19,7 @@ public enum CommonCode implements ResultCode{
     INVALID_PARAM(false,10003,"非法参数！"),
     SAVE_FAIL(false,10004,"保存失败！"),
     UPDATE_FAIL(false,10005,"更新失败！"),
+    NO_TRANSACTION(false,10006,"更新失败！"),
     SERVER_ERROR(false,99999,"抱歉，系统繁忙，请稍后重试！");
 //    private static ImmutableMap<Integer, CommonCode> codes ;
     //操作是否成功

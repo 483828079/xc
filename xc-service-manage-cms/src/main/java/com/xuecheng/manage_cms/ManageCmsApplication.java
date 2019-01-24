@@ -3,11 +3,16 @@ package com.xuecheng.manage_cms;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.client.OkHttp3ClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
+/*
+ *表示该类是eureka的客户端，可以从eureka上发现服务。
+ */
+@EnableDiscoveryClient
 /*
  * 扫描当前包及其子包下的所有@Component,并放入容器中。
  */
