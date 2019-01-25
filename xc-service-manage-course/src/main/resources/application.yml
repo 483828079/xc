@@ -56,7 +56,7 @@ ribbon:
   ReadTimeout: 6000 #请求处理的超时时间
 
 course-publish:
-  siteId: 5b30cba5f58b4411fc6cb1e5 # 站点ID
+  siteId: 5c3b12d9027624372c264214 # 站点ID
   templateId: 5a925be7b00ffc4b3c1578b5 # 模板实现决定好的。
   previewUrl: http://www.xuecheng.com/cms/preview/ # 用来拼接的预览页面。
   pageWebPath: /course/detail/

@@ -38,6 +38,12 @@ public class ManageCourseApplication {
     /*
         开启客户端负载均衡。ribbon的作用就是客户端的负载均衡。
         在客户端拿到要调用服务的列表然后负载均衡算法算出要调用哪个。
+
+        feign的本质还是从Eureka拿到服务列表的ip+端口，
+        通过requestMapping拿到请求地址和请求方式最后生成代理对象，可以根据代理对象调用服务。
+
+        如果Eureka拿到的是多个服务的ip，可以给restTemplate加上@LoadBalanced。
+        让其允许服务端的负载均衡，每次调用服务使用负载均衡算法计算要调用哪个服务。
      */
     @LoadBalanced
     public RestTemplate restTemplate() {

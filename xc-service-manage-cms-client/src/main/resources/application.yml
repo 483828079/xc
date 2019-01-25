@@ -16,8 +16,8 @@ spring:
 xuecheng:
   mq:
     #cms客户端监控的队列名称（不同的客户端监控的队列不能重复）
-    queue: queue_cms_postpage_01
-    routingKey: 5a751fab6abb5044e0d19ea1    #此routingKey为门户站点ID
+    queue: queue_cms_postpage_02
+    routingKey: 5c3b12d9027624372c264214    #此routingKey为门户站点ID
 
 # 使用route类型的Exchange
 # queue 队列名称，也就是该客户端需要监听的Queue名称.

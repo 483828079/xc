@@ -19,4 +19,18 @@ public class FeignTest {
         CmsPage cmsPage = cmsPageClient.findById("5a754adf6abb500ad05688d9");
         System.out.println(cmsPage);
     }
+
+    @Test
+    public void testPost() throws Exception{
+        CmsPage cmsPage = new CmsPage();
+        cmsPage.setHtmlFileId("aaa");
+        cmsPage.setDataUrl("bbb");
+        cmsPage.setHtmlFileId("ccc");
+        cmsPage.setPageName("eee");
+        cmsPage.setSiteId("ddd");
+        cmsPage.setPageAliase("fff");
+        cmsPage.setTemplateId("ggg");
+        cmsPage.setPageParameter("eeef");
+        cmsPageClient.save(cmsPage);
+    }
 }

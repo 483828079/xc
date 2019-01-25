@@ -1,6 +1,7 @@
 package com.xuecheng.framework.domain.cms;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -19,6 +20,7 @@ import java.util.List;
 /**
  * 该类对应的数据库中的document
  * */
+@NoArgsConstructor
 @Document(collection = "cms_page")
 public class CmsPage {
     /**
