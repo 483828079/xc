@@ -13,7 +13,6 @@ import org.springframework.context.annotation.Configuration;
  **/
 @Configuration
 public class ElasticsearchConfig {
-
     @Value("${xuecheng.elasticsearch.hostlist}")
     private String hostlist;
 
@@ -44,5 +43,4 @@ public class ElasticsearchConfig {
         }
         return RestClient.builder(httpHostArray).build();
     }
-
 }
