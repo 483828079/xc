@@ -20,6 +20,7 @@ public enum CourseCode implements ResultCode {
     COURSE_NOTEXIST(false,31103,"该课程并不存在！"),
     COURSE_FROM_IMPERFECT(false,31103,"表单内容不完整！"),
     COURSE_GET_NOTEXISTS(false,31104,"不能获取对应的课程！"),
+    COURSE_PUBLISH_CREATE_INDEX_ERROR(false,31105,"索引创建失败！"),
     COURSE_MEDISURLISNULL_NAMEISNULL(false,31102,"选择的媒资文件名称为空！");
 
     //操作代码

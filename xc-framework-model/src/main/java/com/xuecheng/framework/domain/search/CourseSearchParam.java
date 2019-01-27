@@ -29,5 +29,4 @@ public class CourseSearchParam implements Serializable {
     String sort;
     //过虑字段
     String filter;
-
 }
