@@ -90,7 +90,7 @@ public class EsCourseService {
 		if(StringUtils.isNotEmpty(courseSearchParam.getGrade())){
 			boolQueryBuilder.filter(QueryBuilders.termQuery("grade",courseSearchParam.getGrade()));
 		}
-
+		boolQueryBuilder.mustNot(QueryBuilders.termQuery("_id", "%{id}"));
 		// 分页
 		// 如果当前页小于等于0，默认为1.
 		if(page <= 0){
@@ -106,15 +106,16 @@ public class EsCourseService {
 		searchSourceBuilder.from(start);
 		searchSourceBuilder.size(size);
 
+		// 使用boolean查询
+		searchSourceBuilder.query(boolQueryBuilder);
+
 		// 高亮设置
 		// 将匹配到的term前后分别加上preTags 和 postTags
 		searchSourceBuilder.highlighter(new HighlightBuilder()
-										.preTags("<font class='eslight'>")
-										.postTags("</font>")
-										.field("name"));
+				.preTags("<font class='eslight'>")
+				.postTags("</font>")
+				.field("name"));
 
-		// 使用boolean查询
-		searchSourceBuilder.query(boolQueryBuilder);
 		// 设置source
 		searchRequest.source(searchSourceBuilder);
 
@@ -124,7 +125,7 @@ public class EsCourseService {
 			searchResponse = client.search(searchRequest);
 		} catch (IOException e) {
 			LOGGER.error("xuecheng search error..{}",e.getMessage());
-			return new QueryResponseResult(CommonCode.SUCCESS,new QueryResult<CoursePub>());
+			return new QueryResponseResult(CommonCode.FAIL,new QueryResult<CoursePub>());
 		}
 		// 结果集处理
 		SearchHits hits = searchResponse.getHits();
@@ -146,21 +147,23 @@ public class EsCourseService {
 			Map<String, HighlightField> highlightFields = searchHit.getHighlightFields();
 			if (! Objects.isNull(highlightFields)) {
 				HighlightField highlightField = highlightFields.get("name");
-				Text[] fragments = highlightField.fragments();
-				StringBuilder nameStr = new StringBuilder();
-				for (Text fragment : fragments) {
-					nameStr.append(fragment);
+				if (! Objects.isNull(highlightField)) {
+					Text[] fragments = highlightField.fragments();
+					StringBuilder nameStr = new StringBuilder();
+					for (Text fragment : fragments) {
+						nameStr.append(fragment);
+					}
+					// 替换掉没有高亮效果的name
+					name = nameStr.toString();
 				}
-				// 替换掉没有高亮效果的name
-				name = nameStr.toString();
 			}
 			coursePub.setName(name);
 			// pic
 			coursePub.setPic((String) courseMap.get("pic"));
 			// price
-			coursePub.setPrice(Float.parseFloat((String) courseMap.get("price")));
+			coursePub.setPrice((Double) courseMap.get("price"));
 			// price_old
-			coursePub.setPrice_old(Float.parseFloat((String) courseMap.get("price_old")));
+			coursePub.setPrice_old((Double) courseMap.get("price_old"));
 
 			// 添加coursePub到集合中。
 			coursePubList.add(coursePub);

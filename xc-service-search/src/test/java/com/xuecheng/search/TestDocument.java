@@ -115,7 +115,7 @@ public class TestDocument {
 	@Test
 	public void testDocumentDelete() throws Exception{
 		// 删除Document的请求对象
-		DeleteRequest deleteRequest = new DeleteRequest("xc_course", "doc", "dKzmhGgBSM93s6OpZsiW");
+		DeleteRequest deleteRequest = new DeleteRequest("xc_course", "doc", "%{id}");
 
 		// 调用删除的请求
 		DeleteResponse deleteResponse = restClient.delete(deleteRequest);
