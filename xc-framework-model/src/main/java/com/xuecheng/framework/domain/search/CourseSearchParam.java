@@ -22,8 +22,8 @@ public class CourseSearchParam implements Serializable {
     String grade;
 
     //价格区间
-    Float price_min;
-    Float price_max;
+    Double price_min;
+    Double price_max;
 
     //排序字段
     String sort;
