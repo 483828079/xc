@@ -19,19 +19,26 @@ public class MediaUploadController implements MediaUploadControllerApi {
     MediaUploadService mediaUploadService;
 
     /**
-     * 再上传文件前进行调用，判断文件是否存在，创建文件目录。
+     * 上传文件前进行调用，判断文件是否存在，创建文件目录。
      * @param fileMd5 上传文件的md5
      * @param fileName 上传文件的文件名称
      * @param fileSize 上传文件的大小
      * @param mimetype 上传文件的mimeType
      * @param fileExt 上传文件的拓展名
-     * @return 检查文件是否存在，存在返回失败状态，不存在创建文件目录返回正确状态
+     * @return 检查文件是否存在，存在抛出异常，不存在创建文件目录返回正确状态
      */
     @PostMapping("/register")
     public ResponseResult register(@RequestParam("fileMd5") String fileMd5, @RequestParam("fileName") String fileName, @RequestParam("fileSize") Long fileSize, @RequestParam("mimetype") String mimetype, @RequestParam("fileExt") String fileExt) {
         return mediaUploadService.register(fileMd5,fileName,fileSize,mimetype,fileExt);
     }
 
+    /**
+     * 检查要上传的分块文件是否已经存在(如果已经存在该分块可以不用再上传)
+     * @param fileMd5 文件的md5
+     * @param chunk 分块的索引
+     * @param chunkSize 分块的大小
+     * @return 如果存在返回失败信息，如果不存在返回成功信息
+     */
     @PostMapping("/checkchunk")
     public CheckChunkResult checkchunk(@RequestParam("fileMd5") String fileMd5, @RequestParam("chunk") Integer chunk, @RequestParam("chunkSize") Integer chunkSize) {
         return mediaUploadService.checkchunk(fileMd5,chunk,chunkSize);
