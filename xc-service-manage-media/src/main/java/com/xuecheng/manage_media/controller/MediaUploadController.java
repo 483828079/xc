@@ -37,18 +37,34 @@ public class MediaUploadController implements MediaUploadControllerApi {
      * @param fileMd5 文件的md5
      * @param chunk 分块的索引
      * @param chunkSize 分块的大小
-     * @return 如果存在返回失败信息，如果不存在返回成功信息
+     * @return 分块文件存在并且和要上传分块大小相同返回fileExist为true(进行上传)。
      */
     @PostMapping("/checkchunk")
     public CheckChunkResult checkchunk(@RequestParam("fileMd5") String fileMd5, @RequestParam("chunk") Integer chunk, @RequestParam("chunkSize") Integer chunkSize) {
         return mediaUploadService.checkchunk(fileMd5,chunk,chunkSize);
     }
 
+    /**
+     * 分块文件上传
+     * @param file 要上传的分块文件
+     * @param fileMd5 文件的md5
+     * @param chunk 当前块的索引(文件名)
+     * @return 上传成功返回成功状态，上传失败返回失败状态
+     */
     @PostMapping("/uploadchunk")
     public ResponseResult uploadchunk(@RequestParam("file") MultipartFile file, @RequestParam("chunk") Integer chunk, @RequestParam("fileMd5") String fileMd5) {
         return mediaUploadService.uploadchunk(file,fileMd5,chunk);
     }
 
+    /**
+     * 上传成功后合并上传的块文件
+     * @param fileMd5 上传文件的md5
+     * @param fileName 上传文件的名称
+     * @param fileSize 上传文件的大小
+     * @param mimetype 上传文件的mime类型
+     * @param fileExt 上传文件的拓展名
+     * @return 合并成功返回成功状态，合并失败返回失败状态。
+     */
     @PostMapping("/mergechunks")
     public ResponseResult mergechunks(@RequestParam("fileMd5") String fileMd5, @RequestParam("fileName") String fileName, @RequestParam("fileSize") Long fileSize, @RequestParam("mimetype") String mimetype, @RequestParam("fileExt") String fileExt) {
         return mediaUploadService.mergechunks(fileMd5,fileName,fileSize,mimetype,fileExt);
