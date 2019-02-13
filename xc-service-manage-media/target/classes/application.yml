@@ -10,6 +10,8 @@ spring:
 
 xc-service-manage-media:
   upload-location: F:/develop/video/
+  mq:
+    routingkey-media-video: routingkey_media_video
 
 eureka:
   client:

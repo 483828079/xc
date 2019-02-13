@@ -1,7 +1,6 @@
 package com.xuecheng.manage_media_process;
 
 import com.xuecheng.framework.utils.Mp4VideoUtil;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -19,7 +18,7 @@ import java.io.InputStreamReader;
 @RunWith(SpringRunner.class)
 public class TestProcessBuilder {
 
-    @Test
+    //@Test
     public void testProcessBuilder() throws IOException {
 
         //创建ProcessBuilder对象
@@ -51,7 +50,7 @@ public class TestProcessBuilder {
     }
 
     //测试使用工具类将avi转成mp4
-    @Test
+   // @Test
     public void testProcessMp4(){
         //String ffmpeg_path, String video_path, String mp4_name, String mp4folder_path
         //ffmpeg的路径

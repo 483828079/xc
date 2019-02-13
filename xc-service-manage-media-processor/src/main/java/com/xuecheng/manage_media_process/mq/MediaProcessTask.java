@@ -28,7 +28,7 @@ public class MediaProcessTask {
 	String ffmpeg_path;
 
 	//上传文件根目录
-	@Value("${xc-service-manage-media.upload-location}")
+	@Value("${xc-service-manage-media.video-location}")
 	String serverPath;
 
 	@Autowired
@@ -39,7 +39,7 @@ public class MediaProcessTask {
 	 * @param msg 消息队列中的消息
 	 * @throws IOException
 	 */
-	@RabbitListener(queues = "${xc-service-manage-media.mq.queue-media-processtask}")
+	@RabbitListener(queues = "${xc-service-manage-media.mq.queue-media-video-processor}")
 	public void receiveMediaProcessTask(String msg) throws IOException {
 		Map<String, String> msgMap = JSON.parseObject(msg, Map.class);
 		// 消息队列中的mediaId
