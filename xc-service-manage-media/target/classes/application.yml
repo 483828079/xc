@@ -5,10 +5,12 @@ spring:
     name: xc-service-manage-media
   data:
     mongodb:
-      uri:  mongodb://localhost:27017
+      uri:  mongodb://root:123@localhost:27017
       database: xc_media
+
 xc-service-manage-media:
   upload-location: F:/develop/video/
+
 eureka:
   client:
     registerWithEureka: true #服务注册开关
