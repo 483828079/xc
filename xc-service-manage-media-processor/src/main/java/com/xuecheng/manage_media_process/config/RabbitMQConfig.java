@@ -1,8 +1,11 @@
 package com.xuecheng.manage_media_process.config;
 
 import org.springframework.amqp.core.*;
+import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
+import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.amqp.SimpleRabbitListenerContainerFactoryConfigurer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -51,5 +54,15 @@ public class RabbitMQConfig {
     @Bean
     public Binding binding_queue_media_processtask(@Qualifier("queue_media_video_processtask") Queue queue, @Qualifier(EX_MEDIA_PROCESSTASK) Exchange exchange) {
         return BindingBuilder.bind(queue).to(exchange).with(routingkey_media_video).noargs();
+    }
+
+    // 并发配置, 容器工厂。
+    @Bean("customContainerFactory")
+    public SimpleRabbitListenerContainerFactory containerFactory(SimpleRabbitListenerContainerFactoryConfigurer configurer, ConnectionFactory connectionFactory) {
+        SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
+        factory.setConcurrentConsumers(DEFAULT_CONCURRENT);
+        factory.setMaxConcurrentConsumers(DEFAULT_CONCURRENT);
+        configurer.configure(factory, connectionFactory);
+        return factory;
     }
 }

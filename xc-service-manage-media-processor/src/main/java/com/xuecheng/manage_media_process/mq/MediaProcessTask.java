@@ -39,7 +39,7 @@ public class MediaProcessTask {
 	 * @param msg 消息队列中的消息
 	 * @throws IOException
 	 */
-	@RabbitListener(queues = "${xc-service-manage-media.mq.queue-media-video-processor}")
+	@RabbitListener(queues = "${xc-service-manage-media.mq.queue-media-video-processor}", containerFactory = "customContainerFactory")
 	public void receiveMediaProcessTask(String msg) throws IOException {
 		Map<String, String> msgMap = JSON.parseObject(msg, Map.class);
 		// 消息队列中的mediaId
@@ -134,6 +134,5 @@ public class MediaProcessTask {
 		//m3u8文件url
 		mediaFile.setFileUrl(mediaFile.getFilePath()+"hls/"+m3u8_name);
 		mediaFileRepository.save(mediaFile);
-
 	}
 }
