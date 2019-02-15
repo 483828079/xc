@@ -24,10 +24,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 public class EsCourseService {
@@ -175,5 +172,58 @@ public class EsCourseService {
 		queryResult.setList(coursePubList);
 
 		return new QueryResponseResult<>(CommonCode.SUCCESS, queryResult);
+	}
+
+	/**
+	 * 根据课程id查询课程信息
+	 * @param id
+	 * @return map key课程id CoursePub 发布的课程信息
+	 */
+
+	public Map<String, CoursePub> getAll(String id) {
+		// 从ES中查询课程id对应的课程信息
+		//设置索引库
+		SearchRequest searchRequest = new SearchRequest(es_index);
+		//设置类型
+		searchRequest.types(es_type);
+		SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+		// term查询
+		searchSourceBuilder.query(QueryBuilders.termsQuery("id", id));
+		searchRequest.source(searchSourceBuilder);
+		// 执行查询
+		SearchResponse response = null;
+		try {
+			response = client.search(searchRequest);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		SearchHits hits = response.getHits();
+
+		// 查询结果
+		SearchHit[] searchHits = hits.getHits();
+		Map<String, CoursePub> resultMap = new HashMap<>();
+		for (SearchHit searchHit : searchHits) {
+			CoursePub coursePub = new CoursePub();
+			// 当前document的结果
+			Map<String, Object> sourceAsMap = searchHit.getSourceAsMap();
+			String courseId = (String) sourceAsMap.get("id");
+			String name = (String) sourceAsMap.get("name");
+			String grade = (String) sourceAsMap.get("grade");
+			String charge = (String) sourceAsMap.get("charge");
+			String pic = (String) sourceAsMap.get("pic");
+			String description = (String) sourceAsMap.get("description");
+			String teachplan = (String) sourceAsMap.get("teachplan");
+			// 设置课程信息
+			coursePub.setId(courseId);
+			coursePub.setName(name);
+			coursePub.setPic(pic);
+			coursePub.setGrade(grade);
+			coursePub.setTeachplan(teachplan);
+			coursePub.setDescription(description);
+			resultMap.put(id, coursePub);
+		}
+
+		return resultMap;
 	}
 }

@@ -240,7 +240,7 @@ public class MediaUploadService {
      * 发送mediaId到消息队列
      * @param mediaId
      */
-    private ResponseResult sendProcessVideoMsg(String mediaId) {
+    public ResponseResult sendProcessVideoMsg(String mediaId) {
         // 判断mediaId对应的集合是否存在
         Optional<MediaFile> mediaFileOptional = mediaFileRepository.findById(mediaId);
         if (!mediaFileOptional.isPresent()) {

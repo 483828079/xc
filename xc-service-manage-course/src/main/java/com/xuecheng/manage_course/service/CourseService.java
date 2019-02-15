@@ -50,6 +50,10 @@ public class CourseService {
 	CoursePicRepository coursePicRepository;
 	@Autowired
 	CoursePubRepository coursePubRepository;
+	@Autowired
+	CmsPageClient cmsPageClient;
+	@Autowired
+	TeachplanMediaRepository teachplanMediaRepository;
 
 	@Value("${course-publish.dataUrlPre}")
 	private String publish_dataUrlPre;
@@ -63,8 +67,8 @@ public class CourseService {
 	private String publish_templateId;
 	@Value("${course-publish.previewUrl}")
 	private String previewUrl;
-	@Autowired
-	CmsPageClient cmsPageClient;
+
+
 
 	//查询课程计划
 	public TeachplanNode findTeachplanList(String courseId){
@@ -600,5 +604,53 @@ public class CourseService {
 		//发布页面
 		CmsPostPageResult cmsPostPageResult = cmsPageClient.postPageQuick(cmsPage);
 		return cmsPostPageResult;
+	}
+
+	/**
+	 * 保存课程计划媒资信息
+	 * @param teachplanMedia
+	 * @return
+	 */
+	public ResponseResult saveMedia(TeachplanMedia teachplanMedia) {
+		if (Objects.isNull(teachplanMedia) || StringUtils.isEmpty(teachplanMedia.getTeachplanId())) {
+			ExceptionCast.cast(CommonCode.INVALIDPARAM);
+		}
+		// 只有三级的课程计划才能关联对应视频
+
+		// 要添加视频的课程计划id
+		String teachPlanId = teachplanMedia.getTeachplanId();
+		Optional<Teachplan> teachPlanOptional = teachplanRepository.findById(teachPlanId);
+		// 如果课程计划id对应的课程计划不存在，抛出异常。
+		if (! teachPlanOptional.isPresent()) {
+			ExceptionCast.cast(CommonCode.INVALIDPARAM);
+		}
+
+		// 添加视频的课程计划对象
+		Teachplan teachPlanInfo = teachPlanOptional.get();
+		String teachPlanGrade = teachPlanInfo.getGrade();
+		// 如果课程计划不是三级抛出异常
+		if (StringUtils.isEmpty(teachPlanGrade) || ! "3".equals(teachPlanGrade)) {
+			ExceptionCast.cast(CourseCode.COURSE_MEDIA_TEACHPLAN_GRADEERROR);
+		}
+
+		// 如果当前课程计划媒资信息存在就修改，不存在添加
+		TeachplanMedia teachPlanMediaParam = null;
+		// 课程计划id同样是课程计划媒资的id
+		Optional<TeachplanMedia> teachPlanMediaOptional = teachplanMediaRepository.findById(teachPlanId);
+		// 如果有就使用已经存在的信息，没有就创建新的对象。
+		if (teachPlanMediaOptional.isPresent()) {
+			teachPlanMediaParam = teachPlanMediaOptional.get();
+		} else {
+			teachPlanMediaParam = new TeachplanMedia();
+		}
+
+		// 设置需要保存的信息
+		teachPlanMediaParam.setTeachplanId(teachPlanId);
+		teachPlanMediaParam.setCourseId(teachplanMedia.getCourseId());
+		teachPlanMediaParam.setMediaFileOriginalName(teachplanMedia.getMediaFileOriginalName());
+		teachPlanMediaParam.setMediaId(teachplanMedia.getMediaId());
+		teachPlanMediaParam.setMediaUrl(teachplanMedia.getMediaUrl());
+		teachplanMediaRepository.save(teachPlanMediaParam);
+		return new ResponseResult(CommonCode.SUCCESS);
 	}
 }

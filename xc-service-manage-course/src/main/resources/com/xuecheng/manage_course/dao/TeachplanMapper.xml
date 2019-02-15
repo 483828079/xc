@@ -5,12 +5,17 @@
     <resultMap id="teachplanMap" type="com.xuecheng.framework.domain.course.ext.TeachplanNode">
         <id property="id" column="aid"/>
         <result property="pname" column="apname"/>
+        <result property="grade" column="one_grade"/>
         <collection property="children" ofType="com.xuecheng.framework.domain.course.ext.TeachplanNode">
             <id property="id" column="bid"/>
             <result property="pname" column="bpname"/>
+            <result property="grade" column="two_grade"/>
             <collection property="children" ofType="com.xuecheng.framework.domain.course.ext.TeachplanNode">
                 <id property="id" column="cid"/>
                 <result property="pname" column="cpname"/>
+                <result property="grade" column="three_grade"/>
+                <result property="mediaId" column="mediaId"/>
+                <result property="mediaFileOriginalName" column="mediaFileOriginalName"/>
             </collection>
         </collection>
     </resultMap>
@@ -19,15 +24,22 @@
           SELECT
           a.`id` aid,
           a.`pname` apname,
+          a.grade one_grade,
           b.`id` bid,
           b.`pname` bpname,
+          b.grade two_grade,
           c.`id` cid,
-          c.`pname` cpname
+          c.grade three_grade,
+          c.`pname` cpname,
+          media.media_id mediaId,
+          media.media_fileoriginalname mediaFileOriginalName
         FROM
         teachplan a LEFT JOIN teachplan b
         ON a.id = b.parentid
         LEFT JOIN teachplan c
         ON b.id = c.parentid
+        LEFT JOIN teachplan_media media
+        ON c.id = media.teachplan_id
         WHERE  a.parentid = '0'
         <if test="_parameter!=null and _parameter!=''">
             and a.courseid=#{courseId}

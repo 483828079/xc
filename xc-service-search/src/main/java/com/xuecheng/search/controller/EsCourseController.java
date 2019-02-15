@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/search/course")
@@ -30,5 +31,15 @@ public class EsCourseController implements EsCourseControllerApi {
     @GetMapping(value="/list/{page}/{size}")
     public QueryResponseResult<CoursePub> list(@PathVariable("page") int page, @PathVariable("size") int size, CourseSearchParam courseSearchParam) throws IOException {
         return esCourseService.list(page,size,courseSearchParam);
+    }
+
+    /**
+     * 根据课程id查询课程信息
+     * @param id
+     * @return map key课程id CoursePub 发布的课程信息
+     */
+    @GetMapping("/getall/{id}")
+    public Map<String, CoursePub> getAll(@PathVariable("id") String id) {
+        return esCourseService.getAll(id);
     }
 }
