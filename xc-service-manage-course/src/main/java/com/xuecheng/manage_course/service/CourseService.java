@@ -27,14 +27,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Service
+@RequestMapping
 public class CourseService {
 	@Autowired
 	TeachplanMapper teachplanMapper;
@@ -54,6 +53,8 @@ public class CourseService {
 	CmsPageClient cmsPageClient;
 	@Autowired
 	TeachplanMediaRepository teachplanMediaRepository;
+	@Autowired
+	TeachplanMediaPubRepository teachplanMediaPubRepository;
 
 	@Value("${course-publish.dataUrlPre}")
 	private String publish_dataUrlPre;
@@ -467,6 +468,9 @@ public class CourseService {
 			ExceptionCast.cast(CourseCode.COURSE_PUBLISH_CREATE_INDEX_ERROR);
 		}
 
+		// 发布页面成功后根据courseId对TeachPlanMedia进行实例化
+		this.saveTeachPlanMediaPub(courseId);
+
 		//...
 
 		// 获取课程详情页的URL
@@ -474,6 +478,29 @@ public class CourseService {
 
 		// 响应状态信息和课程详情页URL到页面。
 		return new CoursePublishResult(CommonCode.SUCCESS, pageUrl);
+	}
+
+	/**
+	 * 实例化courseId对应的TeachPlanMediaPub
+	 * @param courseId
+	 */
+	private void saveTeachPlanMediaPub(String courseId) {
+		// 页面发布后，实例化该页面的所有媒资信息，用来同步到索引库。
+		// 如果courseId对应的媒资信息存在就先删除
+		teachplanMediaPubRepository.deleteByCourseId(courseId);
+
+		// 获取courseId对应的所有媒资信息
+		List<TeachplanMedia> mediaList = teachplanMediaRepository.findByCourseId(courseId);
+
+		// 将所有的媒资信息同步到TeachPlanMedia中
+		List<TeachplanMediaPub> teachplanMediaPubList = new ArrayList<>();
+		for (TeachplanMedia teachplanMedia : mediaList) {
+			TeachplanMediaPub teachplanMediaPub = new TeachplanMediaPub();
+			BeanUtils.copyProperties(teachplanMedia, teachplanMediaPub);
+			teachplanMediaPub.setTimestamp(new Date());
+			teachplanMediaPubList.add(teachplanMediaPub);
+		}
+		teachplanMediaPubRepository.saveAll(teachplanMediaPubList);
 	}
 
 	/**

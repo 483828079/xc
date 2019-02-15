@@ -2,6 +2,7 @@ package com.xuecheng.search.controller;
 
 import com.xuecheng.api.search.EsCourseControllerApi;
 import com.xuecheng.framework.domain.course.CoursePub;
+import com.xuecheng.framework.domain.course.TeachplanMediaPub;
 import com.xuecheng.framework.domain.search.CourseSearchParam;
 import com.xuecheng.framework.model.response.QueryResponseResult;
 import com.xuecheng.search.service.EsCourseService;
@@ -41,5 +42,11 @@ public class EsCourseController implements EsCourseControllerApi {
     @GetMapping("/getall/{id}")
     public Map<String, CoursePub> getAll(@PathVariable("id") String id) {
         return esCourseService.getAll(id);
+    }
+
+
+    @GetMapping(value="/getmedia/{teachplanId}")
+    public TeachplanMediaPub getMedia(String teachPlanId) {
+        return null;
     }
 }

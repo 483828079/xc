@@ -1,6 +1,7 @@
 package com.xuecheng.search.service;
 
 import com.xuecheng.framework.domain.course.CoursePub;
+import com.xuecheng.framework.domain.course.TeachplanMediaPub;
 import com.xuecheng.framework.domain.search.CourseSearchParam;
 import com.xuecheng.framework.model.response.CommonCode;
 import com.xuecheng.framework.model.response.QueryResponseResult;
@@ -31,10 +32,16 @@ public class EsCourseService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(EsCourseService.class);
 	@Value("${xuecheng.elasticsearch.course.index}")
 	private String es_index;
+	@Value("${xuecheng.elasticsearch.media.index}")
+	private String es_media_index;
 	@Value("${xuecheng.elasticsearch.course.type}")
 	private String es_type;
+	@Value("${xuecheng.elasticsearch.media.type}")
+	private String es_media_type;
 	@Value("${xuecheng.elasticsearch.course.source_field}")
 	private String source_field;
+	@Value("${xuecheng.elasticsearch.media.source_field}")
+	private String media_source_field;
 
 	@Autowired
 	RestHighLevelClient client;
@@ -225,5 +232,61 @@ public class EsCourseService {
 		}
 
 		return resultMap;
+	}
+
+	/**
+	 * 根据多个课程计划id查询对应的所有媒资信息
+	 * @param teachplanIds
+	 * @return
+	 */
+	public QueryResponseResult<TeachplanMediaPub> getmedia(String[] teachplanIds){
+		//设置索引库
+		SearchRequest searchRequest = new SearchRequest(es_media_index);
+		//设置类型
+		searchRequest.types(es_media_type);
+		SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+		//source源字段过虑
+		String[] source_fields = media_source_field.split(",");
+		searchSourceBuilder.fetchSource(source_fields, new String[]{});
+		// term查询
+		searchSourceBuilder.query(QueryBuilders.termsQuery("teachplan_id", teachplanIds));
+		searchRequest.source(searchSourceBuilder);
+		// 执行查询
+		SearchResponse response = null;
+		try {
+			response = client.search(searchRequest);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		SearchHits hits = response.getHits();
+
+		// 查询结果
+		SearchHit[] searchHits = hits.getHits();
+		List<TeachplanMediaPub> teachplanMediaPubList = new ArrayList<>();
+		for (SearchHit searchHit : searchHits) {
+			TeachplanMediaPub teachplanMediaPub  = new TeachplanMediaPub();
+			Map<String, Object> sourceAsMap = searchHit.getSourceAsMap();
+			//取出课程计划媒资信息
+			String courseid = (String) sourceAsMap.get("courseid");
+			String media_id = (String) sourceAsMap.get("media_id");
+			String media_url = (String) sourceAsMap.get("media_url");
+			String teachplan_id = (String) sourceAsMap.get("teachplan_id");
+			String media_fileoriginalname = (String) sourceAsMap.get("media_fileoriginalname");
+
+			teachplanMediaPub.setCourseId(courseid);
+			teachplanMediaPub.setMediaUrl(media_url);
+			teachplanMediaPub.setMediaFileOriginalName(media_fileoriginalname);
+			teachplanMediaPub.setMediaId(media_id);
+			teachplanMediaPub.setTeachplanId(teachplan_id);
+
+			//将数据加入列表
+			teachplanMediaPubList.add(teachplanMediaPub);
+		}
+
+		//构建返回课程媒资信息对象
+		QueryResult<TeachplanMediaPub> queryResult = new QueryResult<>();
+		queryResult.setList(teachplanMediaPubList);
+		return new QueryResponseResult<>(CommonCode.SUCCESS,queryResult);
 	}
 }
