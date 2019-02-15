@@ -72,7 +72,8 @@ public class CourseService {
 
 	//查询课程计划
 	public TeachplanNode findTeachplanList(String courseId){
-		return teachplanMapper.selectList(courseId);
+		TeachplanNode teachplanNode = teachplanMapper.selectList(courseId);
+		return teachplanNode;
 	}
 
 	/**
@@ -494,9 +495,9 @@ public class CourseService {
 
 		BeanUtils.copyProperties(coursePub, coursePubInfo);
 
-		//设置主键
+		// 设置主键
 		coursePubInfo.setId(courseId);
-		//更新时间戳为最新时间
+		// 更新时间戳为最新时间
 		coursePub.setTimestamp(new Date());
 		//发布时间
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
