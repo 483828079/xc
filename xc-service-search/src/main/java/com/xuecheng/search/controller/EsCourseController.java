@@ -52,7 +52,7 @@ public class EsCourseController implements EsCourseControllerApi {
         String[] teachPlanIds = new String[]{teachPlanId};
         QueryResponseResult<TeachplanMediaPub> queryResponseResult = esCourseService.getmedia(teachPlanIds);
         QueryResult<TeachplanMediaPub> queryResult = queryResponseResult.getQueryResult();
-        if (! Objects.isNull(queryResult) || !Objects.isNull(queryResult.getList()) || queryResult.getList().size() > 0) {
+        if (! Objects.isNull(queryResult) && !Objects.isNull(queryResult.getList()) && queryResult.getList().size() > 0) {
             // 返回第一个媒资信息，因为一个课程计划对应一个媒资信息
             return queryResult.getList().get(0);
         }
