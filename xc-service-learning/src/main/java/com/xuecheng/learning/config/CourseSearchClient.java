@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 @FeignClient(value = "xc-service-search")
 public interface CourseSearchClient {
-	@GetMapping(value="/getmedia/{teachplanId}")
-	public TeachplanMediaPub getMedia(@PathVariable("teachplanId") String teachplanId);
+	@GetMapping(value="/getmedia/{teachPlanId}")
+	public TeachplanMediaPub getMedia(@PathVariable("teachPlanId") String teachPlanId);
 }

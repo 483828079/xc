@@ -47,8 +47,8 @@ public class EsCourseController implements EsCourseControllerApi {
     }
 
 
-    @GetMapping(value="/getmedia/{teachplanId}")
-    public TeachplanMediaPub getMedia(String teachPlanId) {
+    @GetMapping(value="/getmedia/{teachPlanId}")
+    public TeachplanMediaPub getMedia(@PathVariable("teachPlanId") String teachPlanId) {
         String[] teachPlanIds = new String[]{teachPlanId};
         QueryResponseResult<TeachplanMediaPub> queryResponseResult = esCourseService.getmedia(teachPlanIds);
         QueryResult<TeachplanMediaPub> queryResult = queryResponseResult.getQueryResult();
