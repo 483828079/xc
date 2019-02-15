@@ -5,6 +5,7 @@ import com.xuecheng.framework.domain.course.CoursePub;
 import com.xuecheng.framework.domain.course.TeachplanMediaPub;
 import com.xuecheng.framework.domain.search.CourseSearchParam;
 import com.xuecheng.framework.model.response.QueryResponseResult;
+import com.xuecheng.framework.model.response.QueryResult;
 import com.xuecheng.search.service.EsCourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/search/course")
@@ -47,6 +49,13 @@ public class EsCourseController implements EsCourseControllerApi {
 
     @GetMapping(value="/getmedia/{teachplanId}")
     public TeachplanMediaPub getMedia(String teachPlanId) {
-        return null;
+        String[] teachPlanIds = new String[]{teachPlanId};
+        QueryResponseResult<TeachplanMediaPub> queryResponseResult = esCourseService.getmedia(teachPlanIds);
+        QueryResult<TeachplanMediaPub> queryResult = queryResponseResult.getQueryResult();
+        if (! Objects.isNull(queryResult) || !Objects.isNull(queryResult.getList()) || queryResult.getList().size() > 0) {
+            // 返回第一个媒资信息，因为一个课程计划对应一个媒资信息
+            return queryResult.getList().get(0);
+        }
+        return new TeachplanMediaPub();
     }
 }
