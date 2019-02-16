@@ -30,17 +30,17 @@ spring:
       timeBetweenEvictionRunsMillis: 60000 #配置间隔检测连接是否有效的时间（单位是毫秒）
       minEvictableIdleTimeMillis: 300000  #连接在连接池的最小生存时间（毫秒）
 auth:
-  tokenValiditySeconds: 1200  #token存储到redis的过期时间
-  clientId: XcWebApp
-  clientSecret: XcWebApp
-  cookieDomain: java.itcast.cn
-  cookieMaxAge: -1
+  tokenValiditySeconds: 1200  # token存储到redis的过期时间
+  clientId: XcWebApp # 客户端id
+  clientSecret: XcWebApp # 客户端密码
+  cookieDomain: xuecheng.com # 添加cookie的域名
+  cookieMaxAge: -1 # cookie存活时间 -1浏览器关闭销毁
 encrypt:
   key-store:
-    location: classpath:/xc.keystore
-    secret: xuechengkeystore
-    alias: xckey
-    password: xuecheng
+    location: classpath:/xc.keystore # 秘钥所在路径
+    secret: xuechengkeystore # 秘钥库访问密码
+    alias: xckey # 秘钥别名
+    password: xuecheng # 秘钥访问密码
 eureka:
   client:
     registerWithEureka: true #服务注册开关
@@ -57,8 +57,6 @@ ribbon:
   OkToRetryOnAllOperations: false  #对所有操作请求都进行重试，如果是get则可以，如果是post，put等操作没有实现幂等的情况下是很危险的,所以设置为false
   ConnectTimeout: 5000  #请求连接的超时时间
   ReadTimeout: 6000 #请求处理的超时时间
-
-
 
 
 

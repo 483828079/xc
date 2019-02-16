@@ -41,6 +41,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if (StringUtils.isEmpty(username)) {
             return null;
         }
+        // 通过账号查询密码和用户对应权限...
+        // .....
         XcUserExt userext = new XcUserExt();
         userext.setUsername("itcast");
         userext.setPassword(new BCryptPasswordEncoder().encode("123"));
@@ -48,6 +50,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if(userext == null){
             return null;
         }
+
         //取出正确密码（hash值）
         String password = userext.getPassword();
         //这里暂时使用静态密码
