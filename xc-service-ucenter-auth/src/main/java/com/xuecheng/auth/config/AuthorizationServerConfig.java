@@ -134,8 +134,5 @@ class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
                 .tokenKeyAccess("permitAll()")
                 .checkTokenAccess("isAuthenticated()");
     }
-
-
-
 }
 
