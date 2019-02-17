@@ -6,6 +6,7 @@ import com.xuecheng.framework.model.response.ResponseResult;
 import com.xuecheng.framework.model.response.ResultCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.redis.RedisConnectionFailureException;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -36,6 +37,7 @@ public class ExceptionCatch {
     static{
         //在这里加入一些基础的异常类型判断
         builder.put(HttpMessageNotReadableException.class, CommonCode.INVALID_PARAM);
+        builder.put(RedisConnectionFailureException.class, CommonCode.REDIS_CONNECTION_ERROR);
     }
 
     /**

@@ -19,6 +19,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.Objects;
 
 @RestController
 public class AuthController implements AuthControllerApi {
@@ -43,7 +44,10 @@ public class AuthController implements AuthControllerApi {
      */
     @PostMapping("/userlogin")
     public LoginResult login(LoginRequest loginRequest) {
-        loginRequest = new LoginRequest();
+        if (Objects.isNull(loginRequest)) {
+            loginRequest = new LoginRequest();
+        }
+
         // 是否录入用户名
         if (StringUtils.isEmpty(loginRequest.getUsername())) {
             ExceptionCast.cast(AuthCode.AUTH_USERNAME_NONE);
