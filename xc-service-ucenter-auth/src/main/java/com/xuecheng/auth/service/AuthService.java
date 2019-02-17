@@ -5,6 +5,7 @@ import com.xuecheng.framework.client.XcServiceList;
 import com.xuecheng.framework.domain.ucenter.ext.AuthToken;
 import com.xuecheng.framework.domain.ucenter.response.AuthCode;
 import com.xuecheng.framework.exception.ExceptionCast;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -139,11 +140,21 @@ public class AuthService {
             ExceptionCast.cast(AuthCode.AUTH_LOGIN_APPLYTOKEN_FAIL);
         }
 
+        // 获取token信息失败
         if(map == null ||
                 map.get("access_token") == null ||
                 map.get("refresh_token") == null ||
                 map.get("jti") == null){//jti是jwt令牌的唯一标识作为用户身份令牌
-            ExceptionCast.cast(AuthCode.AUTH_LOGIN_APPLYTOKEN_FAIL);
+            // 获取spring security返回的错误信息
+            String error_description = (String) map.get("error_description");
+            // 默认提示的是错误信息，这里使用自定义异常信息。
+            if(StringUtils.isNotEmpty(error_description)){
+                if(error_description.equals("坏的凭证")){
+                    ExceptionCast.cast(AuthCode.AUTH_CREDENTIAL_ERROR);
+                }else if(error_description.indexOf("UserDetailsService returned null")>=0){
+                    ExceptionCast.cast(AuthCode.AUTH_ACCOUNT_NOTEXISTS);
+                }
+            }
         }
 
         AuthToken authToken = new AuthToken();
@@ -171,5 +182,25 @@ public class AuthService {
         //进行base64编码
         byte[] encode = Base64.encode(string.getBytes());
         return "Basic "+new String(encode);
+    }
+
+    /**
+     * 通过身份令牌获取redis中的令牌信息
+     * @param accessToken 身份令牌
+     * @return 如果获取到返回令牌信息，获取不到返回null
+     */
+    public AuthToken getUserToken(String accessToken) {
+        String userToken = "user_token:" + accessToken;
+
+        if (StringUtils.isEmpty(accessToken)) {
+            return null;
+        }
+
+        String jwtTokenStr = stringRedisTemplate.boundValueOps(userToken).get();
+        if (StringUtils.isEmpty(jwtTokenStr)) {
+            return null;
+        }
+
+        return JSON.parseObject(jwtTokenStr, AuthToken.class);
     }
 }

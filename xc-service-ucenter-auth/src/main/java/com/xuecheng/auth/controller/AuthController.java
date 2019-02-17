@@ -5,6 +5,7 @@ import com.xuecheng.auth.service.AuthService;
 import com.xuecheng.framework.domain.ucenter.ext.AuthToken;
 import com.xuecheng.framework.domain.ucenter.request.LoginRequest;
 import com.xuecheng.framework.domain.ucenter.response.AuthCode;
+import com.xuecheng.framework.domain.ucenter.response.JwtResult;
 import com.xuecheng.framework.domain.ucenter.response.LoginResult;
 import com.xuecheng.framework.exception.ExceptionCast;
 import com.xuecheng.framework.model.response.CommonCode;
@@ -13,12 +14,15 @@ import com.xuecheng.framework.utils.CookieUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 import java.util.Objects;
 
 @RestController
@@ -83,6 +87,35 @@ public class AuthController implements AuthControllerApi {
 
 
     public ResponseResult logout() {
+        return null;
+    }
+
+    /**
+     * 通过cookie中记录的身份令牌获取redis中的jwt令牌
+     * @return jwt令牌
+     */
+    @GetMapping("/userjwt")
+    public JwtResult userjwt() {
+        // 获取cookie中的令牌
+        String accessToken = getTokenFormCookie();
+        // 根据身份令牌获取redis中的令牌信息
+        AuthToken authToken = authService.getUserToken(accessToken);
+        if (Objects.isNull(accessToken)) {
+            return new JwtResult(CommonCode.FAIL, null);
+        }
+
+        // 返回页面jwt令牌
+        return new JwtResult(CommonCode.SUCCESS, authToken.getJwt_token());
+    }
+
+    private String getTokenFormCookie() {
+        HttpServletRequest req = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+
+        // readCookie 获取多个cookieName对应的cookieName和cookieValue
+        Map<String, String> cookieMap = CookieUtil.readCookie(req, "uid");
+        if (!Objects.isNull(cookieMap)) {
+            return cookieMap.get("uid");
+        }
         return null;
     }
 }
