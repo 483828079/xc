@@ -203,4 +203,15 @@ public class AuthService {
 
         return JSON.parseObject(jwtTokenStr, AuthToken.class);
     }
+
+    /**
+     * 删除redis中的令牌
+     * @param accessToken
+     * @return
+     */
+    public boolean delToken(String accessToken) {
+        String name = "user_token:" + accessToken;
+        stringRedisTemplate.delete(name);
+        return true;
+    }
 }

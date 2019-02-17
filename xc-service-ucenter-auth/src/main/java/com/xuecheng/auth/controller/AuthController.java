@@ -74,20 +74,22 @@ public class AuthController implements AuthControllerApi {
         return new LoginResult(CommonCode.SUCCESS,accessToken);
     }
 
-    private void addCookie(String token) {
-        HttpServletResponse resp = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
-        // cookieDomain 绑定的域名
-        // path 路径 域名+路径 cookie绑定的范围。 这里是 *.xuecheng.com/都可以获取到。
-        // name cookieName
-        // token cookieValue
-        // cookieMaxAge 有效时间
-        // httpOnly false 允许浏览器获取
-        CookieUtil.addCookie(resp, cookieDomain, "/", "uid", token, cookieMaxAge, false);
-    }
-
-
+    /**
+     * 退出登录，删除cookie中的认证令牌，删除redis中的令牌
+     * @return 返回响应状态
+     */
+    @PostMapping("/userlogout")
     public ResponseResult logout() {
-        return null;
+        // 删除redis中的令牌信息
+        // 身份令牌
+        String accessToken = this.getTokenFormCookie();
+        authService.delToken(accessToken);
+
+        // 删除cookie中的身份令牌
+        clearCookie(accessToken);
+
+        // 无论有没有要删除的令牌,只要执行完毕都返回正确状态。
+        return new ResponseResult(CommonCode.SUCCESS);
     }
 
     /**
@@ -100,7 +102,7 @@ public class AuthController implements AuthControllerApi {
         String accessToken = getTokenFormCookie();
         // 根据身份令牌获取redis中的令牌信息
         AuthToken authToken = authService.getUserToken(accessToken);
-        if (Objects.isNull(accessToken)) {
+        if (Objects.isNull(authToken)) {
             return new JwtResult(CommonCode.FAIL, null);
         }
 
@@ -108,6 +110,35 @@ public class AuthController implements AuthControllerApi {
         return new JwtResult(CommonCode.SUCCESS, authToken.getJwt_token());
     }
 
+    /**
+     * 将身份令牌添加到cookie
+     * @param token
+     */
+    private void addCookie(String token) {
+        HttpServletResponse resp = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
+        // cookieDomain 绑定的域名
+        // path 路径 域名+路径 cookie绑定的范围。 这里是 *.xuecheng.com/都可以获取到。
+        // name cookieName
+        // token cookieValue
+        // cookieMaxAge 有效时间
+        // httpOnly false 允许浏览器获取
+        CookieUtil.addCookie(resp, cookieDomain, "/", "uid", token, cookieMaxAge, false);
+    }
+
+
+    /**
+     *  删除cookie中的身份令牌(实际是设置存活时间为0)
+     * @param token
+     */
+    private void clearCookie(String token){
+        HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
+        CookieUtil.addCookie(response, cookieDomain, "/", "uid", token, 0, false);
+    }
+
+    /**
+     * 获取cookie中存储的认证令牌
+     * @return 如果获取不到认证令牌返回null
+     */
     private String getTokenFormCookie() {
         HttpServletRequest req = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
 
@@ -118,4 +149,5 @@ public class AuthController implements AuthControllerApi {
         }
         return null;
     }
+
 }
