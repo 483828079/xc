@@ -149,5 +149,4 @@ public class AuthController implements AuthControllerApi {
         }
         return null;
     }
-
 }

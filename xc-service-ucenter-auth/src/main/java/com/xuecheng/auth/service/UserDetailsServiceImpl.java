@@ -52,22 +52,30 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if(userext == null){
             return null;
         }
-        userext.setPermissions(new ArrayList<>());
 
         //取出正确密码（hash值）
         String password = userext.getPassword();
         //用户权限，这里暂时使用静态数据，最终会从数据库读取
         //从数据库获取权限
+        userext.setPermissions(new ArrayList<>());
+        // 获取权限信息集合
         List<XcMenu> permissions = userext.getPermissions();
+        // 取出权限的code属性放在集合中,之后作为用户拥有的权限
         List<String> user_permission = new ArrayList<>();
         permissions.forEach(item-> user_permission.add(item.getCode()));
-//        user_permission.add("course_get_baseinfo");
-//        user_permission.add("course_find_pic");
+        user_permission.add("course_get_baseinfo");
+        user_permission.add("course_find_pic");
+
+        // 将数组切割为用,分割的字符串。
+        // jdk8中提供了String.join方法效果相同。
+        // String.join(",", user_permission);
         String user_permission_string  = StringUtils.join(user_permission.toArray(), ",");
+
 
         // 用户名密码权限，初始化User。用来做认证授权。
         UserJwt userDetails = new UserJwt(username,
                 password,
+                // 将用,分割的permission code转换为List<GrantedAuthority> 权限集合。
                 AuthorityUtils.commaSeparatedStringToAuthorityList(user_permission_string));
 
         // 增加一些用户的其他信息

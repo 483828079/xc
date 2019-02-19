@@ -28,6 +28,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -56,7 +57,8 @@ public class AuthService {
     public AuthToken login(String username, String password, String clientId, String clientSecret){
         // 申请令牌
         AuthToken authToken = applyToken(username,password,clientId, clientSecret);
-        if(authToken == null){
+        if(Objects.isNull(authToken) || Objects.isNull(authToken.getAccess_token())
+            || Objects.isNull(authToken.getJwt_token()) || Objects.isNull(authToken.getRefresh_token())) {
             ExceptionCast.cast(AuthCode.AUTH_LOGIN_APPLYTOKEN_FAIL);
         }
         // 将token存储到redis

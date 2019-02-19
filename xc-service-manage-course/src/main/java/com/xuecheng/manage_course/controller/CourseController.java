@@ -12,6 +12,7 @@ import com.xuecheng.framework.model.response.QueryResponseResult;
 import com.xuecheng.framework.model.response.ResponseResult;
 import com.xuecheng.manage_course.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -22,6 +23,7 @@ public class CourseController implements CourseControllerApi {
 
     /**
      * 查询课程计划列表
+     *  @PreAuthorize 方法之前进行授权
      * @param courseId 课程id。
      * @return
      */
@@ -42,6 +44,7 @@ public class CourseController implements CourseControllerApi {
 
     /**
      * 分页查询课程列表
+     * @PreAuthorize 在方法调用之前进行授权
      * @param page 当前页
      * @param size 每页显示个数
      * @param courseListRequest 查询条件，以便后期拓展。
@@ -49,6 +52,7 @@ public class CourseController implements CourseControllerApi {
      * CourseInfo 拓展字段，能够除了能够保存基本课程信息还能保存图片。
      */
     @GetMapping("coursebase/list/{page}/{size}")
+    @PreAuthorize("hasAuthority('course_find_list1')")
     public QueryResponseResult<CourseInfo> findCourseList(@PathVariable("page") int page,
                                                           @PathVariable("size") int size,
                                                           CourseListRequest courseListRequest) {
@@ -66,6 +70,7 @@ public class CourseController implements CourseControllerApi {
     }
 
     @GetMapping("/coursebase/get/{courseId}")
+    @PreAuthorize("hasAuthority('course_get_baseinfo')")
     public CourseBase getCourseBaseById(@PathVariable("courseId") String courseId) throws RuntimeException {
         return courseService.getCourseBaseById(courseId);
     }
