@@ -33,10 +33,18 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.gridfs.GridFsResource;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -360,8 +368,21 @@ public class PageService {
 		}
 
 		// 请求数据Url
-		Map<String, Object> dataMap = restTemplate.getForEntity(dataUrl, Map.class).getBody();
+		//Map<String, Object> dataMap = restTemplate.getForEntity(dataUrl, Map.class).getBody();
+		// 请求体内容(授权码模式，用户名，密码)
+		MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+		// 请求头内容(Authorization:客户端id:客户端密码base64编码)
+		MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+		String jwtToken = request.getHeader("authorization");
+		if (!Objects.isNull(jwtToken)) {
+			ExceptionCast.cast(CmsCode.CMS_GENERATEHTML_DATAISNULL);
+		}
+		headers.add("authorization", jwtToken);
+		HttpEntity<MultiValueMap<String, String>> multiValueMapHttpEntity =  new HttpEntity<>(body, headers);
 
+		ResponseEntity<Map> exchange = restTemplate.exchange(dataUrl, HttpMethod.GET, multiValueMapHttpEntity, Map.class);
+		Map dataMap = exchange.getBody();
 		if (dataMap.size() == 0 || Objects.isNull(dataMap)) {
 			// 根据页面的数据url获取不到数据
 			ExceptionCast.cast(CmsCode.CMS_GENERATEHTML_DATAISNULL);

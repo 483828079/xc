@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -55,16 +56,15 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         //取出正确密码（hash值）
         String password = userext.getPassword();
-        //用户权限，这里暂时使用静态数据，最终会从数据库读取
-        //从数据库获取权限
-        userext.setPermissions(new ArrayList<>());
+        // 防止遍历权限的时候空指针异常，如果权限集合为null先初始化集合。
+        if (Objects.isNull(userext.getPermissions())) {
+            userext.setPermissions(new ArrayList<>());
+        }
         // 获取权限信息集合
         List<XcMenu> permissions = userext.getPermissions();
         // 取出权限的code属性放在集合中,之后作为用户拥有的权限
         List<String> user_permission = new ArrayList<>();
         permissions.forEach(item-> user_permission.add(item.getCode()));
-        user_permission.add("course_get_baseinfo");
-        user_permission.add("course_find_pic");
 
         // 将数组切割为用,分割的字符串。
         // jdk8中提供了String.join方法效果相同。

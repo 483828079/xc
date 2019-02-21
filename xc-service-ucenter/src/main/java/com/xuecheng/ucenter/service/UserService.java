@@ -1,17 +1,20 @@
 package com.xuecheng.ucenter.service;
 
 import com.xuecheng.framework.domain.ucenter.XcCompanyUser;
+import com.xuecheng.framework.domain.ucenter.XcMenu;
 import com.xuecheng.framework.domain.ucenter.XcUser;
 import com.xuecheng.framework.domain.ucenter.ext.XcUserExt;
 import com.xuecheng.framework.exception.ExceptionCast;
 import com.xuecheng.framework.model.response.CommonCode;
 import com.xuecheng.ucenter.dao.XcCompanyUserRepository;
+import com.xuecheng.ucenter.dao.XcMenuMapper;
 import com.xuecheng.ucenter.dao.XcUserRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -20,6 +23,8 @@ public class UserService {
     private XcUserRepository xcUserRepository;
     @Autowired
     private XcCompanyUserRepository xcCompanyUserRepository;
+    @Autowired
+    private XcMenuMapper xcMenuMapper;
 
     /**
      * 根据用户名获取用户信息，用户所属公司,用户对应权限
@@ -53,6 +58,12 @@ public class UserService {
         XcCompanyUser companyUser = xcCompanyUserRepository.findByUserId(userId);
         if (! Objects.isNull(companyUser)) {
             xcUserExt.setCompanyId(companyUser.getCompanyId());
+        }
+
+        // 根据userId查询用户对应权限
+        List<XcMenu> xcMenus = xcMenuMapper.selectPermissionByUserId(userId);
+        if (! Objects.isNull(xcMenus)) {
+            xcUserExt.setPermissions(xcMenus);
         }
 
         // 返回用户、用户公司、用户对应权限信息

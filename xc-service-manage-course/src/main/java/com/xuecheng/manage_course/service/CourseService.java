@@ -176,7 +176,15 @@ public class CourseService {
 	 * @return 响应(响应状态+分页信息)
 	 * CourseInfo 拓展字段，能够除了能够保存基本课程信息还能保存图片。
 	 */
-	public QueryResponseResult<CourseInfo> findCourseList(int page, int size, CourseListRequest courseListRequest) {
+	public QueryResponseResult<CourseInfo> findCourseList(String companyId, int page, int size, CourseListRequest courseListRequest) {
+		if (Objects.isNull(courseListRequest)) {
+			courseListRequest = new CourseListRequest();
+		}
+
+		if (StringUtils.isNotEmpty(companyId)) {
+			courseListRequest.setCompanyId(companyId);
+		}
+
 		// 在执行第一条sql语句之前执行。
 		PageHelper.startPage(page, size);
 		Page<CourseInfo> courseInfoPage = courseMapper.findCourseListPage(courseListRequest);
