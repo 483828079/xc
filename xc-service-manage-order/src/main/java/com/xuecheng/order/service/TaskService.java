@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
@@ -40,6 +41,7 @@ public class TaskService {
      * @param routingKey
      */
     @Transactional
+    @Rollback(false)
     public void publish(XcTask xcTask, String ex, String routingKey) {
         String taskId = xcTask.getId();
         Optional<XcTask> xcTaskOptional = xcTaskRepository.findById(taskId);
@@ -48,7 +50,20 @@ public class TaskService {
             // 这里的xcTask为对象，所以会被序列化存放到消息队列中
             rabbitTemplate.convertAndSend(ex, routingKey, xcTask);
             // 发送消息后更新updateTime为当前时间
-            xcTaskRepository.updateTaskTime(taskId, xcTaskOptional.get().getUpdateTime());
+            xcTaskRepository.updateTaskTime(taskId, new Date());
         }
+    }
+
+
+    /**
+     * 根据版本号和taskId修改task。
+     * @param taskId
+     * @param version
+     * @return 影响行数
+     */
+    @Transactional
+    public int getTask(String taskId,int version){
+        int i = xcTaskRepository.updateTaskVersion(taskId, version);
+        return i;
     }
 }

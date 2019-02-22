@@ -34,8 +34,15 @@ public class ChooseCourseTask {
         List<XcTask> taskList = taskService.findTaskList(time, 1000);
         // 发送消息到消息队列，并且更新updateTime为当前时间。
         for (XcTask xcTask : taskList) {
-            // 拿出消息表中的消息Exchange和routeKey发送消息。
-            taskService.publish(xcTask, xcTask.getMqExchange(), xcTask.getMqRoutingkey());
+            // 根据taskId和version查询task，修改version版本 版本+1。
+            // 如果影响行>0 说明taskId和version对应的行存在。
+            // 发送消息，修改update。
+            // mysql事物级别为可重复读，在一个事物修改表的时候另个事物是不能修改表的。
+            // 等提交事物后，根据版本不能查询到对应行了。可防止不同服务发送多条消息。
+            if (taskService.getTask(xcTask.getId(), xcTask.getVersion()) > 0) {
+                // 拿出消息表中的消息Exchange和routeKey发送消息。
+                taskService.publish(xcTask, xcTask.getMqExchange(), xcTask.getMqRoutingkey());
+            }
             LOGGER.info("send choose course task id:{}",xcTask.getId());
         }
     }
@@ -59,7 +66,7 @@ public class ChooseCourseTask {
      * "," 字符表示列举
      * “？”字符仅被用于月中的天和周中的天两个子表达式，表示不指定值
      */
-    @Scheduled(cron = "0/3 * * * * *")//每隔3秒执行一次
+    //@Scheduled(cron = "0/3 * * * * *")//每隔3秒执行一次
     public void task1() {
         LOGGER.info("===============测试定时任务1开始===============");
         try {
@@ -72,7 +79,7 @@ public class ChooseCourseTask {
 
 
 
-    @Scheduled(fixedRate = 3000) //上次执行开始时间后5秒执行
+    //@Scheduled(fixedRate = 3000) //上次执行开始时间后5秒执行
     public void task2(){
         LOGGER.info("===============测试定时任务2开始===============");
         try {

@@ -10,7 +10,9 @@ import lombok.ToString;
  */
 @ToString
 public enum LearningCode implements ResultCode {
-    LEARNING_GETMEDIA_ERROR(false,45008,"课程计划对应媒资文件获取失败！");
+    LEARNING_GETMEDIA_ERROR(false,45008,"课程计划对应媒资文件获取失败！"),
+    CHOOSECOURSE_TASKISNULL(false,45010,"选课计划任务为空！"),
+    CHOOSECOURSE_USERISNULL(false,45009,"选课用户信息为空！");
 
     //操作代码
     boolean success;

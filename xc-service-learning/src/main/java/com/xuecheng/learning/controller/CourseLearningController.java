@@ -21,5 +21,4 @@ public class CourseLearningController implements CourseLearningControllerApi {
         //获取课程学习地址
         return learningService.getMedia(courseId, teachPlanId);
     }
-
 }
